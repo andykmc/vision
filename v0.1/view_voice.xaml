@@ -1,0 +1,18 @@
+﻿<Page
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	x:Class="v0_1.view_voice"
+	x:Name="Page"
+	WindowTitle="Page"
+	FlowDirection="LeftToRight"
+	Width="640" Height="480"
+	WindowWidth="640" WindowHeight="480" Background="White" Loaded="Page_Loaded">
+
+	<Grid x:Name="LayoutRoot">
+		<Image Margin="238,0,264,-38" Source="icons/mic_w.png" Stretch="Fill" VerticalAlignment="Bottom" Height="138" ClipToBounds="True"/>
+		<Image Margin="238,-40,264,0" ClipToBounds="True" Source="icons\mic_w.png" Stretch="Fill" VerticalAlignment="Top" Height="138"/>
+		<Image Margin="238,162,264,180" ClipToBounds="True" Source="icons\mic_w.png" Stretch="Fill"/>
+		<TextBox Margin="215,143,240,0" VerticalAlignment="Top" Height="31" Text="TextBox" TextWrapping="Wrap"/>
+		<Label HorizontalAlignment="Left" Margin="228,107,0,0" VerticalAlignment="Top" Content="input box"/>
+	</Grid>
+</Page>

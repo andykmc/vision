@@ -1,0 +1,24 @@
+﻿<Page
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	x:Class="v0_1.view_draw"
+	x:Name="Page"
+	WindowTitle="Page"    
+	FlowDirection="LeftToRight"
+	Width="640" Height="480"
+	WindowWidth="640" WindowHeight="480" Background="White" Loaded="Page_Loaded" mc:Ignorable="d">
+
+	<Grid x:Name="LayoutRoot">
+		<TextBlock Margin="297,8,302,0" FontFamily="Calibri" FontSize="18.667" Text="Draw" TextWrapping="Wrap" VerticalAlignment="Top" Height="25"/>
+		<Grid Margin="169,78.5,147,77.5">
+			<Border Height="324" Width="324" BorderBrush="#FFBBBBBB" BorderThickness="2">
+				<Border.Effect>
+					<DropShadowEffect ShadowDepth="2"/>
+				</Border.Effect>
+				<InkCanvas x:Name="InkCanvas" Background="White" Width="320" Height="320"/>
+			</Border>		
+		</Grid>
+		<Button x:Name="testButton" HorizontalAlignment="Left" Margin="41,78,0,0" VerticalAlignment="Top" Width="75" Content="Test Button" Click="testButton_Click" />		
+	</Grid>
+</Page>
