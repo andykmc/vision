@@ -250,7 +250,7 @@
         </Ellipse>
         <Image x:Name="hand_palm" Margin="159.688,32,0,0" Width="64" Height="64" Source="icons/Hands-Whole-hand-icon.png" Stretch="Fill" VerticalAlignment="Top" HorizontalAlignment="Left"/>
         <Image x:Name="hand_grip" Margin="75,42.232,0,0" Height="64" Source="icons/Fist_hand_paw_handwriting(4).png" RenderTransformOrigin="0.5,0.5" VerticalAlignment="Top" Stretch="Fill" Width="64" HorizontalAlignment="Left"/>
-        <Button Content="Previous Page" HorizontalAlignment="Right" Height="27" Margin="0,0,-102,132" VerticalAlignment="Bottom" Width="94" Name="previousViewButton" Click="previousViewButton_Click" />        
-              
+        <Button Content="Previous Page" HorizontalAlignment="Right" Height="27" Margin="0,0,-102,132" VerticalAlignment="Bottom" Width="94" Name="previousViewButton" Click="previousViewButton_Click" />
+        <Label Content="Label" HorizontalAlignment="Right" Margin="0,368,-85,86" Name="testLabel" />
     </Grid>
 </Window>

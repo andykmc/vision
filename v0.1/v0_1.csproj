@@ -74,6 +74,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="EasyTimer.cs" />
     <Compile Include="MyGesturePath.cs" />
     <Compile Include="MyParams.cs" />
     <Compile Include="MyPipeline.cs" />

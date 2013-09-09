@@ -11,24 +11,37 @@ namespace v0_1
     {
         Window parentWindow;
         ListBox viewList;
+        Label testLabel;
         public List<views> previousViews;
         public views currentView;
+        bool needDebouncing;
+        IDisposable timer;
         
         public ViewControlHelper(Window mainWindow)
         {
             parentWindow = mainWindow;
             viewList = (ListBox)parentWindow.FindName("viewList");
+            testLabel = (Label)parentWindow.FindName("testLabel");
             previousViews = new List<views>();
             currentView = views.view_home;
+            needDebouncing = false;
         }        
 
         public void gotoView(views view)
-        {
-            if (getCurrentView() != view)
+        {   
+            if (getCurrentView() != view && needDebouncing == false)
             {
+                needDebouncing = true;
                 addPreviousView(currentView);
                 setCurrentView(view);
                 viewList.SelectedIndex = (int)view;
+                
+                testLabel.Content = "TRUE";
+                timer = EasyTimer.SetTimeout(() =>
+                {
+                    needDebouncing = false;
+                    //testLabel.Content = "FALSE";
+                }, 1000);
             }
         }
 

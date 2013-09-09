@@ -102,7 +102,7 @@ namespace VoiceRecognition.cs
 
     class Program
     {
-        static void Main(string[] args)
+        static void Main2(string[] args)
         {
 
             string[] wstr = new string[] {"select", "selecting", "selecting mode", "rank", "ranking", "ranking mode", "swap forward", 
