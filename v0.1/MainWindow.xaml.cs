@@ -13,6 +13,7 @@ using System.Windows.Shapes;
 using System.Xml;
 using System.Windows.Media.Animation;
 using System.ComponentModel;
+using System.Windows.Ink;
 
 namespace v0_1
 {
@@ -31,8 +32,11 @@ namespace v0_1
         Point newPoint;
         List<DependencyObject> hitResultsList;
         Button hoveredButton;
+        InkCanvas hoveredInkCanvas;
         int opennesThreadshold;
-        bool selectable;
+        bool needDebouncing;
+        bool inkCanvasMouseDown;
+        IDisposable debouncingTimer;
 
 		public MainWindow()
 		{
@@ -51,7 +55,11 @@ namespace v0_1
             this.backgroundWorker1.RunWorkerAsync();
             hitResultsList = new List<DependencyObject>();
             opennesThreadshold = 20;
-            selectable = true;
+            needDebouncing = false;
+            hoveredButton = null;
+            hoveredInkCanvas = null;
+            debouncingTimer = null;
+            inkCanvasMouseDown = false;
 		}
 
         private void goDrawViewButton_Click(object sender, RoutedEventArgs e)
@@ -111,21 +119,22 @@ namespace v0_1
         {            
             MyParams geoNodeParams = new MyParams();
             geoNodeParams = (MyParams)e.UserState;
+            MyGesturePath myPath = null;
             
             //move the hand
             XLabel.Content = geoNodeParams.nodeX.ToString();
             YLabel.Content = geoNodeParams.nodeY.ToString();
-            
-            NativeMethods.SetCursorPos(
-                (int)Application.Current.MainWindow.Left + (int)SystemParameters.FixedFrameVerticalBorderWidth + 1 + 640 - (int)geoNodeParams.nodeX * 2,
-                (int)Application.Current.MainWindow.Top + (int)SystemParameters.FixedFrameHorizontalBorderHeight + (int)SystemParameters.WindowCaptionHeight + 1 + (int)geoNodeParams.nodeY * 2
-            );            
 
             //check existance of geoNode
             if ((geoNodeParams.alertLabel != PXCMGesture.Alert.Label.LABEL_ANY) &&
                 (geoNodeParams.alertLabel != PXCMGesture.Alert.Label.LABEL_GEONODE_INACTIVE) &&
                 (geoNodeParams.alertLabel != PXCMGesture.Alert.Label.LABEL_FOV_BLOCKED))
             {
+                NativeMethods.SetCursorPos(
+                    (int)Application.Current.MainWindow.Left + (int)SystemParameters.FixedFrameVerticalBorderWidth + 1 + 640 - (int)geoNodeParams.nodeX * 2,
+                    (int)Application.Current.MainWindow.Top + (int)SystemParameters.FixedFrameHorizontalBorderHeight + (int)SystemParameters.WindowCaptionHeight + 1 + (int)geoNodeParams.nodeY * 2
+                );
+
                 if ((geoNodeParams.alertLabel == PXCMGesture.Alert.Label.LABEL_FOV_LEFT) ||
                     (geoNodeParams.alertLabel == PXCMGesture.Alert.Label.LABEL_FOV_RIGHT) ||
                     (geoNodeParams.alertLabel == PXCMGesture.Alert.Label.LABEL_FOV_TOP) ||
@@ -146,7 +155,17 @@ namespace v0_1
                 {
                     this.hand_palm.Visibility = Visibility.Visible;
                     this.hand_grip.Visibility = Visibility.Hidden;
-                    selectable = true;
+
+                    //Raise the InkCanvas mouse up event
+                    //if (hoveredInkCanvas != null)
+                    if (hoveredInkCanvas != null && inkCanvasMouseDown == true)
+                    {
+                        //======Start of method 1========
+                        hoveredInkCanvas.RaiseEvent(new MouseButtonEventArgs(Mouse.PrimaryDevice, Environment.TickCount, MouseButton.Left) { RoutedEvent = InkCanvas.MouseUpEvent });
+                        inkCanvasMouseDown = false;
+                        hoveredInkCanvas.ReleaseMouseCapture();
+                        //=======End of method 1=========
+                    }
                 }
                 else if (geoNodeParams.opennes >= 0 && geoNodeParams.opennes <= opennesThreadshold)
                 {
@@ -162,10 +181,12 @@ namespace v0_1
                     }
                     else
                     {
-                        if ((newPoint.X > 160) && (newPoint.X < 480) &&
+                        myPath = new MyGesturePath(oldPoint, newPoint);
+                        
+                        /*if ((newPoint.X > 160) && (newPoint.X < 480) &&
                             (newPoint.Y > 110) && (newPoint.Y < 430))
                         {
-                            MyGesturePath myPath = new MyGesturePath(oldPoint, newPoint);
+                            myPath = new MyGesturePath(oldPoint, newPoint);
 
                             if ((oldPoint.X != newPoint.X) || (oldPoint.Y != newPoint.Y))
                             {
@@ -174,30 +195,96 @@ namespace v0_1
                             //panel1.Invalidate();
                             //drawingCanvas.Invalidate();
                             // signalLight.Invalidate();
-                        }
-                    }
-                    //Raise the mouse click event                    
-                    // Perform actions on the hit test results list. 
-                    if (hoveredButton != null)
+                        }*/
+                    }                                        
+                    // Perform actions on the hit test results list.
+                    //Raise the Button mouse click event
+                    if (hoveredButton != null && needDebouncing == false)
                     {
-                        hoveredButton.RaiseEvent(new MouseButtonEventArgs(Mouse.PrimaryDevice, Environment.TickCount, MouseButton.Left) { RoutedEvent = Button.ClickEvent });
+                        needDebouncing = true;
+                        hoveredButton.RaiseEvent(new MouseButtonEventArgs(Mouse.PrimaryDevice, Environment.TickCount, MouseButton.Left) { RoutedEvent = Button.ClickEvent });                        
+                        debouncingTimer = EasyTimer.SetTimeout(() =>
+                        {
+                            needDebouncing = false;                            
+                        }, 5000);
+                    }
+                    //Raise the InkCanvas mouse down event
+                    //if (hoveredInkCanvas != null)
+                    if (hoveredInkCanvas != null && inkCanvasMouseDown == false)
+                    {
+                        //======Start of method 1========(to be used with Raising InkcCanvas mouse down event)
+                        /* Problem: can not correct show the drawn immediately, of shown after finishing one stroke
+                         * Findings: 1. this method is done by simulating mouse down event
+                         *           2. may be missing the event for adding stroke to stroke property of InkCanvas
+                         */
+                        inkCanvasMouseDown = true;
+                        hoveredInkCanvas.Focus();
+                        hoveredInkCanvas.CaptureMouse();
+                        hoveredInkCanvas.RaiseEvent(new MouseButtonEventArgs(Mouse.PrimaryDevice, Environment.TickCount, MouseButton.Left) { RoutedEvent = InkCanvas.MouseDownEvent });
+                        //=======End of method 1=========
+
+                        
+                        //======Start of method 2========
+                        /*
+                         * Problem: can show the stroke correctly, but very high latency
+                         * Findings: probably because this method simply add child to Inkcanvas, processing power and memory consuming
+                        Line linetodraw = new Line();
+                        linetodraw.X1 = myPath.OldPoint.X;//0
+                        linetodraw.Y1 = myPath.OldPoint.Y;//0
+                        linetodraw.X2 = myPath.NewPoint.X;//10
+                        linetodraw.Y2 = myPath.NewPoint.Y;//10
+                        linetodraw.StrokeThickness = 2;
+                        linetodraw.Stroke = new SolidColorBrush(Colors.Black);
+                        this.hoveredInkCanvas.Children.Add(linetodraw);
+                        */
+                        //=======End of method 1=========
+
+                        //======Method 3 under investigation=====
+                        /*
+                         * Target: 
+                        StrokeCollection strokeCollection = new StrokeCollection();
+                        Stroke stroke = new Stroke();
+                        strokeCollection.
+                        */
                     }
                 }
-                if (geoNodeParams.opennes <= opennesThreadshold) selectable = false;
+                //if (geoNodeParams.opennes <= opennesThreadshold) selectable = false;
                 oldPoint = newPoint;
 
                 if (geoNodeParams.gestureLabel == PXCMGesture.Gesture.Label.LABEL_NAV_SWIPE_DOWN)
                 {
                     viewControlHelper.gotoPreviousView();
-                }
+                }                
             }
             else
             {
                 this.hand_palm.Visibility = Visibility.Hidden;
                 this.hand_grip.Visibility = Visibility.Hidden;
             }
+            var viewString = "Views:";
+            foreach (var view in viewControlHelper.previousViews)
+            {
+                viewString += view.ToString() + ",";
+            }
+            this.testLabel.Content = viewString;
+            //this.testLabel.Content = viewControlHelper.previousViews.Count().ToString();
+            this.currentPageLabel.Content = viewControlHelper.currentView.ToString();
+            this.debouncingLabel.Content = needDebouncing.ToString();
+
+            //capture the events
+            var events = EventManager.GetRoutedEvents();
+            foreach (var routedEvent in events)
+            {
+                EventManager.RegisterClassHandler(typeof(UserControl), routedEvent, new RoutedEventHandler(handler));
+            }
+            eventBox.ScrollToEnd();
         }
-        
+
+        //capture the events
+        internal static void handler(object sender, RoutedEventArgs e)
+        {            
+            MessageBox.Show(e.RoutedEvent.ToString());
+        }
         
         //Render the captured view into the Rectangle
         private void viewList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -223,11 +310,11 @@ namespace v0_1
             return start as T;
         }
         private void ProcessHitTestResultsList()
-        {
+        {   
             foreach (var item in hitResultsList)
             {
-                //MessageBox.Show(item.ToString(), "process", MessageBoxButton.OKCancel);
-
+                //Search for the top most button
+                //MessageBox.Show(item.ToString(), "process", MessageBoxButton.OKCancel);                
                 var tempButtonBase = FindInTree<Button>(item);
                 if (tempButtonBase != null && tempButtonBase.GetType() == typeof(Button))
                 {
@@ -238,6 +325,17 @@ namespace v0_1
                 else
                 {
                     hoveredButton = null;
+                }
+                //Then search for the top most InkCanvas
+                var tempInkCanvasBase = FindInTree<InkCanvas>(item);
+                if (tempInkCanvasBase != null && tempInkCanvasBase.GetType() == typeof(InkCanvas))
+                {
+                    hoveredInkCanvas = tempInkCanvasBase;
+                    break;
+                }
+                else
+                {
+                    hoveredInkCanvas = null;
                 }
             }
             //MessageBox.Show("bottom reached", "process", MessageBoxButton.OKCancel);
@@ -300,6 +398,7 @@ namespace v0_1
     {
         view_home,
         view_draw,
-        view_voice
+        view_voice,
+        view_none
     }
 }
