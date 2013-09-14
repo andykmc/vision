@@ -28,6 +28,7 @@ namespace v0_1
         ViewControlHelper viewControlHelper;
         //for gesture control
         BackgroundWorker backgroundWorker1;
+        BackgroundWorker backgroundWorker2;
         Point oldPoint;
         Point newPoint;
         List<DependencyObject> hitResultsList;
@@ -46,13 +47,20 @@ namespace v0_1
             //for changing pages
             viewControlHelper = new ViewControlHelper(this);
             //for gesture control
-            this.backgroundWorker1 = new BackgroundWorker();
-            this.backgroundWorker1.WorkerReportsProgress = true;
-            this.backgroundWorker1.WorkerSupportsCancellation = true;
-            this.backgroundWorker1.DoWork += new DoWorkEventHandler(this.backgroundWorker1_DoWork);
+            backgroundWorker1 = new BackgroundWorker();
+            backgroundWorker1.WorkerReportsProgress = true;
+            backgroundWorker1.WorkerSupportsCancellation = true;
+            backgroundWorker1.DoWork += new DoWorkEventHandler(this.backgroundWorker1_DoWork);
             backgroundWorker1.ProgressChanged += new ProgressChangedEventHandler(this.backgroundWorker1_ProgressChanged);
-            this.backgroundWorker1.RunWorkerCompleted += new RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
-            this.backgroundWorker1.RunWorkerAsync();
+            backgroundWorker1.RunWorkerCompleted += new RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
+            backgroundWorker1.RunWorkerAsync();
+            backgroundWorker2 = new BackgroundWorker();
+            backgroundWorker2.WorkerReportsProgress = true;
+            backgroundWorker2.WorkerSupportsCancellation = true;
+            backgroundWorker2.DoWork += new DoWorkEventHandler(this.backgroundWorker2_DoWork);
+            //backgroundWorker2.ProgressChanged += new ProgressChangedEventHandler(this.backgroundWorker2_ProgressChanged);
+            //backgroundWorker2.RunWorkerCompleted += new RunWorkerCompletedEventHandler(this.backgroundWorker2_RunWorkerCompleted);
+            backgroundWorker2.RunWorkerAsync();
             hitResultsList = new List<DependencyObject>();
             opennesThreadshold = 20;
             needDebouncing = false;
@@ -71,7 +79,41 @@ namespace v0_1
         {
             viewControlHelper.gotoView(views.view_voice);
         }
-        
+        public void backgroundWorker2_DoWork(object sender, DoWorkEventArgs e)
+        {
+            VoicePipeline pipeline = new VoicePipeline();
+            pipeline.SetVoiceCommands();
+            pipeline.EnableVoiceRecognition(0);
+            if (!pipeline.Init())
+            {
+                return;
+            }
+            MessageBox.Show("Voice pipline initialized");
+            while (true)
+            {
+                if (pipeline.AcquireFrame(true))
+                {
+                    var detectedPhrase = pipeline.getDetectedPhrase();
+                    if (detectedPhrase != "")
+                    {
+                        MessageBox.Show(detectedPhrase);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Failed to initialize or stream data");
+                    break;
+                }
+
+                pipeline.ReleaseFrame();
+                //check if need to terminate the pipline when window is closing
+                if (backgroundWorker2.CancellationPending)
+                { pipeline.Dispose(); e.Cancel = true; return; }
+            }
+            pipeline.Close();
+            pipeline.Dispose();
+        }
+
         public void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
             MyPipeline pipeline = new MyPipeline();
@@ -79,12 +121,10 @@ namespace v0_1
             MyParams geoNodeParams = new MyParams();
 
             pipeline.Init();
-            bool hasFrame;
-            MessageBox.Show("pipline initialized");
+            MessageBox.Show("Gesture pipline initialized");
             while (true)
             {
-                hasFrame = pipeline.AcquireFrame(false);
-                if (hasFrame)
+                if (pipeline.AcquireFrame(false))
                 {
                     if (alertLabel != pipeline.geoNodeParams.alertLabel)
                     { alertLabel = pipeline.geoNodeParams.alertLabel; }
@@ -111,9 +151,6 @@ namespace v0_1
             }
             pipeline.Dispose();
         }
-        
-        public void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        { }        
         
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {            
@@ -254,7 +291,7 @@ namespace v0_1
                 if (geoNodeParams.gestureLabel == PXCMGesture.Gesture.Label.LABEL_NAV_SWIPE_DOWN)
                 {
                     viewControlHelper.gotoPreviousView();
-                }                
+                }
             }
             else
             {
@@ -279,6 +316,9 @@ namespace v0_1
             }
             eventBox.ScrollToEnd();
         }
+
+        public void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        { }
 
         //capture the events
         internal static void handler(object sender, RoutedEventArgs e)
@@ -386,6 +426,7 @@ namespace v0_1
         {
             
             backgroundWorker1.CancelAsync();
+            backgroundWorker2.CancelAsync();
         }
 
         private void previousViewButton_Click(object sender, RoutedEventArgs e)

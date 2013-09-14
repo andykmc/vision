@@ -3,37 +3,84 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace VoiceRecognition.cs
+namespace v0_1
 {
-    class MyPipeline : UtilMPipeline
-    {
+    class VoicePipeline : UtilMPipeline
+    {        
+        string[] wstr = new string[] {"select", "selecting", "selecting mode", "rank", "ranking", "ranking mode", "swap forward", 
+                "swap back", "reset", "restart", "cat", "kitty", "aeroplane", "plane", "dog", "puppy", "donut", "Eiffel Tower", "tower", 
+                "Tom Mason", "Taylor Swift", "T-shirt", "tennis racket", "apple", "eyeglasses", "hourglass", "Moon", "sun", "revolver", 
+                "gun", "hamburger", "pumpkin", "ladder", "skull", "car", "I MuSe"};
         protected int nframes;
         protected bool device_lost;
+        bool voiceState;
+        bool previousVoiceState;
+        public string alertLabel;
+        public string detectedPhrase;
 
-        public MyPipeline()
+        public VoicePipeline()
             : base()
         {
             EnableVoiceRecognition();
             nframes = 0;
             device_lost = false;
+            voiceState = false;
+            previousVoiceState = false;
+            alertLabel = "";
+            detectedPhrase = "";
         }
+
         public override bool OnDisconnect()
         {
-            if (!device_lost) Console.WriteLine("Device disconnected");
+            //if (!device_lost) Console.WriteLine("Device disconnected");
             device_lost = true;
             return base.OnDisconnect();
         }
 
         public override void OnReconnect()
         {
-            Console.WriteLine("Device reconnected");
+            //Console.WriteLine("Device reconnected");
             device_lost = false;
+        }
+
+        public bool SetVoiceCommands()
+        {
+            return base.SetVoiceCommands(this.wstr);
+        }
+
+        public override void OnAlert(ref PXCMVoiceRecognition.Alert data)
+        {
+            voiceState = !voiceState;
+            alertLabel = data.label.ToString();
+            base.OnAlert(ref data);
+        }
+
+        bool commandDetected()
+        {
+            if (voiceState != previousVoiceState && alertLabel == "")
+            {
+                previousVoiceState = voiceState;
+                return true;
+            }
+            else return false;
+        }
+
+        public string getDetectedPhrase()
+        {
+            if (commandDetected())
+                return detectedPhrase;
+            else return "";
         }
 
         public override void OnRecognized(ref PXCMVoiceRecognition.Recognition data)
         {
+            voiceState = !voiceState;
+            alertLabel = "";
+            detectedPhrase = data.dictation;
+            /*
             string str;
             str = data.dictation;
+            
             Console.WriteLine("Recognized<{0}>", str);
 
 
@@ -92,14 +139,16 @@ namespace VoiceRecognition.cs
                 Console.WriteLine("Voice Command!\n");
             else
                 Console.WriteLine("Please speak a command word or a name of categories.\n");
+            */
         }
 
         //public override bool OnNewFrame() {
         //    Console.Write(".");
         //    return (++nframes<50000);
         //}
-    };
+    }
 
+    /*
     class Program
     {
         static void Main2(string[] args)
@@ -127,7 +176,7 @@ namespace VoiceRecognition.cs
             Console.WriteLine("{0}\n", wstr[cnt - 1]);
 
             // To do the voice setting
-            MyPipeline pipeline = new MyPipeline();
+            VoicePipeline pipeline = new VoicePipeline();
             Console.WriteLine("Please speak a command word or a name of categories.\n\n");
             pipeline.SetVoiceCommands(wstr);
 
@@ -137,4 +186,5 @@ namespace VoiceRecognition.cs
             pipeline.Dispose();
         }
     }
+    */
 }
