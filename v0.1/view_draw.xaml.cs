@@ -17,7 +17,9 @@ namespace v0_1
 	{
         Window parentWindow;
         TextBox textBox;
-        ViewControlHelper viewControlHelper;
+        ListBox viewList;
+        //ViewControlHelper viewControlHelper;
+        //ViewControlHelper viewControlHelper2;
 		public view_draw()
 		{
 			InitializeComponent();
@@ -29,7 +31,7 @@ namespace v0_1
             //set viewControlHelper after page is loaded into main window            
             parentWindow = Window.GetWindow(this);
             textBox = (TextBox)parentWindow.FindName("eventBox");
-            viewControlHelper = new ViewControlHelper(parentWindow);            
+            viewList = (ListBox)parentWindow.FindName("viewList");
         }
 
         private void testButton_Click(object sender, RoutedEventArgs e)
@@ -287,6 +289,11 @@ namespace v0_1
         private void InkCanvas_TargetUpdated(object sender, DataTransferEventArgs e)
         {
             textBox.Text += "InkCanvas_TargetUpdated\n";
-        }        
+        }
+
+        private void goVoiceViewButton_Click(object sender, RoutedEventArgs e)
+        {
+            viewList.SelectedIndex = (int)views.view_result;
+        }
 	}
 }

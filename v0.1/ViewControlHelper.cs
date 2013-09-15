@@ -13,33 +13,42 @@ namespace v0_1
         ListBox viewList;
         //Label testLabel;
         public List<views> previousViews;
+        public List<views> viewsHistory;
         public views currentView;
         //public bool needDebouncing;
         //IDisposable timer;
         public views viewChoosed;
         
-        public ViewControlHelper(Window mainWindow)
+        public ViewControlHelper(Window mainWindow, views rootView)
         {
             parentWindow = mainWindow;
             viewList = (ListBox)parentWindow.FindName("viewList");
             //testLabel = (Label)parentWindow.FindName("testLabel");
             previousViews = new List<views>();
-            currentView = views.view_home;
+            currentView = rootView;
+            viewsHistory = new List<views>();
+            viewsHistory.Add(rootView);
             //needDebouncing = false;
             viewChoosed = views.view_none;
-        }        
+        }
 
         public void gotoView(views view)
         {   
             //if (getCurrentView() != view && needDebouncing == false)
-            if (getCurrentView() != view)
+            if (currentView != view)
             {
+                /*
                 viewChoosed = view;
-                //needDebouncing = true;
                 addPreviousView(currentView);
                 setCurrentView(view);
+                viewList.SelectedIndex = (int)view;*/
+
+                viewChoosed = view;
+                currentView = view;
+                //viewsHistory.Add(view);
                 viewList.SelectedIndex = (int)view;
-                
+
+                //needDebouncing = true;
                 /*testLabel.Content = "TRUE";
                 timer = EasyTimer.SetTimeout(() =>
                 {
@@ -51,7 +60,8 @@ namespace v0_1
         }
 
         public void gotoPreviousView()
-        {            
+        {   
+            /*
             if (previousViews.Count > 0)
             {
                 viewChoosed = getPreviousView();
@@ -59,9 +69,17 @@ namespace v0_1
                 removePreviousView();
                 viewList.SelectedIndex = (int)currentView;                
             }
+             */
+            if (viewsHistory.Count > 1)
+            {   
+                viewsHistory.RemoveAt(viewsHistory.Count - 1);
+                viewChoosed = viewsHistory.Last();
+                currentView = viewChoosed;
+                viewList.SelectedIndex = (int)currentView;
+            }
             //testLabel.Content = previousViews.Count().ToString();
         }
-
+        /*
         public void gotoHomeView()
         {
             resetPreviousViews();
@@ -98,5 +116,6 @@ namespace v0_1
         {
             previousViews = new List<views>();
         }
+         */
     }
 }

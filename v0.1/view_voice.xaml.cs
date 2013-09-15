@@ -24,7 +24,7 @@ namespace v0_1
         {
             //set viewControlHelper after page is loaded into main window
             Window parentWindow = Window.GetWindow(this);
-            viewControlHelper = new ViewControlHelper(parentWindow); 
+            viewControlHelper = new ViewControlHelper(parentWindow, views.view_voice); 
         }
 	}
 }

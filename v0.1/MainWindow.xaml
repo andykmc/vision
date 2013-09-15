@@ -23,7 +23,10 @@
 		            <View Title="Voice View">
 		                <Page Source="view_voice.xaml"/>
 		            </View>
-		        </Views>
+                    <View Title="Result View">
+                        <Page Source="view_result.xaml"/>
+                    </View>
+                </Views>
 		    </x:XData>
 		</XmlDataProvider>
 		<!--End of Defining views!-->
@@ -177,10 +180,10 @@
 
     <Grid x:Name="LayoutRoot" Margin="0" Width="640" Height="480" HorizontalAlignment="Left" VerticalAlignment="Top">
         <!--Start Control box for switching views!-->
-        <ListBox x:Name="viewList" Width="78" SelectedIndex="0"
+        <ListBox x:Name="viewList" Width="84" SelectedIndex="0"
 			ItemsSource="{Binding Source={StaticResource views}, XPath=Views/View}"
 			DisplayMemberPath="@Title"                    
-			SelectionChanged="viewList_SelectionChanged" Margin="0,18.5,-98,0" Height="57.5" ClipToBounds="False" HorizontalAlignment="Right" VerticalAlignment="Top">
+			SelectionChanged="viewList_SelectionChanged" Margin="0,1,-89,0" Height="73" ClipToBounds="False" HorizontalAlignment="Right" VerticalAlignment="Top">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Vertical"/>

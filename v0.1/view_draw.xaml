@@ -8,10 +8,142 @@
 	FlowDirection="LeftToRight"
 	Width="640" Height="480"
 	WindowWidth="640" WindowHeight="480" Background="White" Loaded="Page_Loaded" mc:Ignorable="d">
+	<Page.Resources>
+<!--********************************************
+		*END Resources for page switching animation*
+		********************************************!-->        
+		<Style x:Key="ButtonStyle1" TargetType="{x:Type Button}">
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type Button}">
+						<ControlTemplate.Resources>
+							<Storyboard x:Key="Storyboard1">
+								<ColorAnimationUsingKeyFrames BeginTime="00:00:00" Duration="00:00:00.0010000" Storyboard.TargetName="ellipse" Storyboard.TargetProperty="(Shape.Fill).(GradientBrush.GradientStops)[1].(GradientStop.Color)">
+									<SplineColorKeyFrame KeyTime="00:00:00" Value="#FFB1B0B0"/>
+								</ColorAnimationUsingKeyFrames>
+								<ColorAnimationUsingKeyFrames BeginTime="00:00:00" Duration="00:00:00.0010000" Storyboard.TargetName="ellipse" Storyboard.TargetProperty="(Shape.Fill).(GradientBrush.GradientStops)[0].(GradientStop.Color)">
+									<SplineColorKeyFrame KeyTime="00:00:00" Value="Gray"/>
+								</ColorAnimationUsingKeyFrames>
+								<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="ellipse1" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
+									<SplineDoubleKeyFrame KeyTime="00:00:00" Value="3.935"/>
+									<SplineDoubleKeyFrame KeyTime="00:00:00.2000000" Value="3.104"/>
+								</DoubleAnimationUsingKeyFrames>
+								<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="ellipse1" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
+									<SplineDoubleKeyFrame KeyTime="00:00:00" Value="5.5"/>
+									<SplineDoubleKeyFrame KeyTime="00:00:00.2000000" Value="4.687"/>
+								</DoubleAnimationUsingKeyFrames>
+								<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="ellipse1" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
+									<SplineDoubleKeyFrame KeyTime="00:00:00" Value="4.14"/>
+									<SplineDoubleKeyFrame KeyTime="00:00:00.2000000" Value="3.295"/>
+								</DoubleAnimationUsingKeyFrames>
+								<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="ellipse1" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)">
+									<SplineDoubleKeyFrame KeyTime="00:00:00" Value="-9.445"/>
+									<SplineDoubleKeyFrame KeyTime="00:00:00.2000000" Value="-9.056"/>
+								</DoubleAnimationUsingKeyFrames>
+								<BooleanAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="ellipse1" Storyboard.TargetProperty="(UIElement.ClipToBounds)">
+									<DiscreteBooleanKeyFrame KeyTime="00:00:00" Value="False"/>
+									<DiscreteBooleanKeyFrame KeyTime="00:00:00.2000000" Value="False"/>
+								</BooleanAnimationUsingKeyFrames>
+								<BooleanAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="ellipse1" Storyboard.TargetProperty="(UIElement.SnapsToDevicePixels)">
+									<DiscreteBooleanKeyFrame KeyTime="00:00:00" Value="False"/>
+									<DiscreteBooleanKeyFrame KeyTime="00:00:00.2000000" Value="False"/>
+								</BooleanAnimationUsingKeyFrames>
+								<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="ellipse1" Storyboard.TargetProperty="(UIElement.Opacity)">
+									<SplineDoubleKeyFrame KeyTime="00:00:00" Value="0"/>
+									<SplineDoubleKeyFrame KeyTime="00:00:00.2000000" Value="1"/>
+								</DoubleAnimationUsingKeyFrames>
+								<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="ellipse1" Storyboard.TargetProperty="(Shape.Stroke).(GradientBrush.GradientStops)[1].(GradientStop.Offset)">
+									<SplineDoubleKeyFrame KeyTime="00:00:00" Value="1"/>
+									<SplineDoubleKeyFrame KeyTime="00:00:00.2000000" Value="1"/>
+								</DoubleAnimationUsingKeyFrames>
+								<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="ellipse1" Storyboard.TargetProperty="(Shape.Stroke).(GradientBrush.GradientStops)[2].(GradientStop.Offset)">
+									<SplineDoubleKeyFrame KeyTime="00:00:00" Value="0.5"/>
+									<SplineDoubleKeyFrame KeyTime="00:00:00.2000000" Value="0.406"/>
+								</DoubleAnimationUsingKeyFrames>
+								<ColorAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="ellipse1" Storyboard.TargetProperty="(Shape.Stroke).(GradientBrush.GradientStops)[1].(GradientStop.Color)">
+									<SplineColorKeyFrame KeyTime="00:00:00" Value="Black"/>
+									<SplineColorKeyFrame KeyTime="00:00:00.2000000" Value="Black"/>
+								</ColorAnimationUsingKeyFrames>
+								<ColorAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="ellipse1" Storyboard.TargetProperty="(Shape.Stroke).(GradientBrush.GradientStops)[2].(GradientStop.Color)">
+									<SplineColorKeyFrame KeyTime="00:00:00" Value="White"/>
+									<SplineColorKeyFrame KeyTime="00:00:00.2000000" Value="White"/>
+								</ColorAnimationUsingKeyFrames>
+								<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="ellipse1" Storyboard.TargetProperty="(Shape.Stroke).(GradientBrush.GradientStops)[3].(GradientStop.Offset)">
+									<SplineDoubleKeyFrame KeyTime="00:00:00" Value="0.635"/>
+									<SplineDoubleKeyFrame KeyTime="00:00:00.2000000" Value="0.607"/>
+								</DoubleAnimationUsingKeyFrames>
+								<ColorAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="ellipse1" Storyboard.TargetProperty="(Shape.Stroke).(GradientBrush.GradientStops)[3].(GradientStop.Color)">
+									<SplineColorKeyFrame KeyTime="00:00:00" Value="#FFBABABA"/>
+									<SplineColorKeyFrame KeyTime="00:00:00.2000000" Value="White"/>
+								</ColorAnimationUsingKeyFrames>
+							</Storyboard>
+							<Storyboard x:Key="Storyboard2"/>
+						</ControlTemplate.Resources>
+						<Grid>
+							<Ellipse x:Name="ellipse1" Fill="{x:Null}" HorizontalAlignment="Stretch" Margin="27.3,42.02,36.7,23.98" VerticalAlignment="Stretch" Width="Auto" Height="Auto" RenderTransformOrigin="0.5,0.5">
+								<Ellipse.RenderTransform>
+									<TransformGroup>
+										<ScaleTransform/>
+										<SkewTransform/>
+										<RotateTransform/>
+										<TranslateTransform/>
+									</TransformGroup>
+								</Ellipse.RenderTransform>
+								<Ellipse.Stroke>
+									<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+										<GradientStop Color="Black" Offset="0"/>
+										<GradientStop Color="White" Offset="1"/>
+										<GradientStop Color="White" Offset="0.939"/>
+										<GradientStop Color="#FFBABABA" Offset="0.635"/>
+									</LinearGradientBrush>
+								</Ellipse.Stroke>
+							</Ellipse>
+							<Ellipse x:Name="ellipse">
+								<Ellipse.Fill>
+									<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" MappingMode="RelativeToBoundingBox">
+										<GradientStop Color="#FFD6D6D6" Offset="1"/>
+										<GradientStop Color="#FFEEEEEE"/>
+									</LinearGradientBrush>
+								</Ellipse.Fill>
+							</Ellipse>
+							<ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" RecognizesAccessKey="True"/>
+						</Grid>
+						<ControlTemplate.Triggers>
+							<EventTrigger RoutedEvent="FrameworkElement.Loaded"/>
+							<Trigger Property="IsCancel" Value="False"/>
+							<Trigger Property="IsMouseOver" Value="False">
+								<Setter Property="Fill" TargetName="ellipse">
+									<Setter.Value>
+										<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" MappingMode="RelativeToBoundingBox">
+											<GradientStop Color="#FFABABAB" Offset="1"/>
+											<GradientStop Color="#FFCECECE"/>
+										</LinearGradientBrush>
+									</Setter.Value>
+								</Setter>
+							</Trigger>
+							<Trigger Property="IsFocused" Value="True"/>
+							<Trigger Property="IsDefaulted" Value="True"/>
+							<Trigger Property="IsMouseOver" Value="True">
+								<Trigger.ExitActions>
+									<RemoveStoryboard BeginStoryboardName="Storyboard1_BeginStoryboard2"/>
+								</Trigger.ExitActions>
+								<Trigger.EnterActions>
+									<BeginStoryboard x:Name="Storyboard1_BeginStoryboard2" Storyboard="{StaticResource Storyboard1}"/>
+								</Trigger.EnterActions>
+							</Trigger>
+							<EventTrigger RoutedEvent="FrameworkElement.Loaded"/>
+							<Trigger Property="IsPressed" Value="True"/>
+							<Trigger Property="IsEnabled" Value="False"/>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+	</Page.Resources>
 
 	<Grid x:Name="LayoutRoot">
 		<TextBlock Margin="297,8,302,0" FontFamily="Calibri" FontSize="18.667" Text="Draw" TextWrapping="Wrap" VerticalAlignment="Top" Height="25"/>
-		<Grid Margin="169,78.5,147,77.5">
+		<Grid Margin="128,77.5,188,78.5">
 			<Border Height="324" Width="324" BorderBrush="#FFBBBBBB" BorderThickness="2">
 				<Border.Effect>
 					<DropShadowEffect ShadowDepth="2"/>
@@ -19,6 +151,16 @@
 				<InkCanvas x:Name="InkCanvas" Background="White" Width="320" Height="320" ActiveEditingModeChanged="InkCanvas_ActiveEditingModeChanged" ContextMenuClosing="InkCanvas_ContextMenuClosing" ContextMenuOpening="InkCanvas_ContextMenuOpening" DataContextChanged="InkCanvas_DataContextChanged" DefaultDrawingAttributesReplaced="InkCanvas_DefaultDrawingAttributesReplaced" DragEnter="InkCanvas_DragEnter" DragLeave="InkCanvas_DragLeave" DragOver="InkCanvas_DragOver" Drop="InkCanvas_Drop" EditingModeChanged="InkCanvas_EditingModeChanged" GotFocus="InkCanvas_GotFocus" GotMouseCapture="InkCanvas_GotMouseCapture" IsMouseCapturedChanged="InkCanvas_IsMouseCapturedChanged" IsMouseCaptureWithinChanged="InkCanvas_IsMouseCaptureWithinChanged" IsMouseDirectlyOverChanged="InkCanvas_IsMouseDirectlyOverChanged" LayoutUpdated="InkCanvas_LayoutUpdated" ManipulationCompleted="InkCanvas_ManipulationCompleted" ManipulationDelta="InkCanvas_ManipulationDelta" ManipulationInertiaStarting="InkCanvas_ManipulationInertiaStarting" ManipulationStarted="InkCanvas_ManipulationStarted" ManipulationStarting="InkCanvas_ManipulationStarting" MouseDown="InkCanvas_MouseDown" MouseMove="InkCanvas_MouseMove" MouseUp="InkCanvas_MouseUp" QueryContinueDrag="InkCanvas_QueryContinueDrag" QueryCursor="InkCanvas_QueryCursor" StrokeCollected="InkCanvas_StrokeCollected" StrokesReplaced="InkCanvas_StrokesReplaced" Gesture="InkCanvas_Gesture" ManipulationBoundaryFeedback="InkCanvas_ManipulationBoundaryFeedback" MouseEnter="InkCanvas_MouseEnter" MouseLeave="InkCanvas_MouseLeave" MouseLeftButtonDown="InkCanvas_MouseLeftButtonDown" MouseLeftButtonUp="InkCanvas_MouseLeftButtonUp" MouseRightButtonDown="InkCanvas_MouseRightButtonDown" MouseRightButtonUp="InkCanvas_MouseRightButtonUp" SelectionChanged="InkCanvas_SelectionChanged" SelectionChanging="InkCanvas_SelectionChanging" SelectionMoved="InkCanvas_SelectionMoved" SelectionMoving="InkCanvas_SelectionMoving" SourceUpdated="InkCanvas_SourceUpdated" TargetUpdated="InkCanvas_TargetUpdated" />
 			</Border>		
 		</Grid>
-		<Button x:Name="testButton" HorizontalAlignment="Left" Margin="41,78,0,0" VerticalAlignment="Top" Width="75" Content="Test Button" Click="testButton_Click" />		
+		<Button x:Name="testButton" HorizontalAlignment="Left" Margin="8,11.04,0,0" VerticalAlignment="Top" Width="75" Content="Button" Click="testButton_Click" />
+		<Button x:Name="goVoiceViewButton" Margin="0,339.044,88,78.5" Style="{DynamicResource ButtonStyle1}" Content="Done" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Right" Width="62" Click="goVoiceViewButton_Click">
+			<Button.RenderTransform>
+				<TransformGroup>
+					<ScaleTransform/>
+					<SkewTransform/>
+					<RotateTransform/>
+					<TranslateTransform/>
+				</TransformGroup>
+			</Button.RenderTransform>
+		</Button>		
 	</Grid>
 </Page>

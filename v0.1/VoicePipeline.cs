@@ -59,7 +59,8 @@ namespace v0_1
 
         bool commandDetected()
         {
-            if (voiceState != previousVoiceState && alertLabel == "")
+            //if (voiceState != previousVoiceState && alertLabel == "")
+            if (voiceState != previousVoiceState)
             {   
                 previousVoiceState = voiceState;
                 return true;
@@ -73,8 +74,9 @@ namespace v0_1
             {
                 MyVoiceParams myVoiceParams = new MyVoiceParams();
                 myVoiceParams.detectedPhrase = detectedPhrase;
-                myVoiceParams.alertLabel = "";
+                myVoiceParams.alertLabel = alertLabel;
                 myVoiceParams.confidenceLevel = confidenceLevel;
+                alertLabel = "";
                 return myVoiceParams;
             }
             else
@@ -83,6 +85,7 @@ namespace v0_1
                 myVoiceParams.detectedPhrase = "";
                 myVoiceParams.alertLabel = alertLabel;
                 myVoiceParams.confidenceLevel = 0;
+                alertLabel = "";
                 return myVoiceParams;
             }
         }
@@ -90,7 +93,7 @@ namespace v0_1
         public override void OnRecognized(ref PXCMVoiceRecognition.Recognition data)
         {
             voiceState = !voiceState;
-            alertLabel = "";
+            //alertLabel = "";
             detectedPhrase = data.dictation;
             confidenceLevel = data.confidence;
             /*

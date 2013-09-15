@@ -45,7 +45,7 @@ namespace v0_1
             //for viewer animation effect
             animatedViewer = new AnimatedViewer(this);
             //for changing pages
-            viewControlHelper = new ViewControlHelper(this);
+            viewControlHelper = new ViewControlHelper(this, views.view_home);
             //for gesture control
             backgroundWorker1 = new BackgroundWorker();
             backgroundWorker1.WorkerReportsProgress = true;
@@ -72,12 +72,14 @@ namespace v0_1
 
         private void goDrawViewButton_Click(object sender, RoutedEventArgs e)
         {
-            viewControlHelper.gotoView(views.view_draw);
+            viewList.SelectedIndex = (int)views.view_draw;
+            //viewControlHelper.gotoView(views.view_draw);
         }
 
         private void goVoiceViewButton_Click(object sender, RoutedEventArgs e)
         {
-            viewControlHelper.gotoView(views.view_voice);
+            viewList.SelectedIndex = (int)views.view_voice;
+            //viewControlHelper.gotoView(views.view_voice);
         }
         public void backgroundWorker2_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -124,7 +126,7 @@ namespace v0_1
                     break;
                 }
 
-                pipeline.ReleaseFrame();                
+                pipeline.ReleaseFrame();
             }
             pipeline.Close();
             pipeline.Dispose();
@@ -192,7 +194,8 @@ namespace v0_1
         private void backgroundWorker2_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             MyVoiceParams detectedVoiceParams = (MyVoiceParams)e.UserState;
-            MessageBox.Show("Phrase:" + detectedVoiceParams.detectedPhrase + " Confidence:" + detectedVoiceParams.confidenceLevel);
+            if (detectedVoiceParams.alertLabel == "" && detectedVoiceParams.confidenceLevel > 40)
+            { MessageBox.Show("Phrase:" + detectedVoiceParams.detectedPhrase + " Confidence:" + detectedVoiceParams.confidenceLevel + " Alert:" + detectedVoiceParams.alertLabel); }
         }
 
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -287,7 +290,7 @@ namespace v0_1
                             //drawingCanvas.Invalidate();
                             // signalLight.Invalidate();
                         }*/
-                    }                                        
+                    }
                     // Perform actions on the hit test results list.
                     //Raise the Button mouse click event
                     if (hoveredButton != null && needDebouncing == false)
@@ -383,6 +386,7 @@ namespace v0_1
         //Render the captured view into the Rectangle
         private void viewList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            viewControlHelper.viewsHistory.Add((views)viewList.SelectedIndex);
             animatedViewer.RenderCapturedView();
         }
         //For controlling the cursor
@@ -494,6 +498,7 @@ namespace v0_1
         view_home,
         view_draw,
         view_voice,
+        view_result,
         view_none
     }
 }
