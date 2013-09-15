@@ -5,13 +5,13 @@ using System.Text;
 
 namespace v0_1
 {
-    class MyPipeline : UtilMPipeline
+    class GesturePipeline : UtilMPipeline
     {
-        public MyParams geoNodeParams;
+        public MyGestureParams geoNodeParams;
         protected int nframes;
         protected bool device_lost;
 
-        public MyPipeline()
+        public GesturePipeline()
             : base()
         {
             EnableGesture();
@@ -20,7 +20,7 @@ namespace v0_1
             EnableImage(PXCMImage.ColorFormat.COLOR_FORMAT_DEPTH, 320, 240);
             nframes = 0;
             device_lost = false;
-            geoNodeParams = new MyParams();
+            geoNodeParams = new MyGestureParams();
         }
         public override void OnGesture(ref PXCMGesture.Gesture data)
         {

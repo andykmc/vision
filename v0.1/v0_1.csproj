@@ -76,8 +76,9 @@
     </Compile>
     <Compile Include="EasyTimer.cs" />
     <Compile Include="MyGesturePath.cs" />
-    <Compile Include="MyParams.cs" />
-    <Compile Include="MyPipeline.cs" />
+    <Compile Include="MyGestureParams.cs" />
+    <Compile Include="GesturePipeline.cs" />
+    <Compile Include="MyVoiceParams.cs" />
     <Compile Include="ViewControlHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MainWindow.xaml.cs">

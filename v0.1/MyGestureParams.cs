@@ -6,7 +6,7 @@ using System.Text;
 
 namespace v0_1
 {
-    class MyParams
+    class MyGestureParams
     {
         public float nodeX;
         public float nodeY;
@@ -14,7 +14,7 @@ namespace v0_1
         public PXCMGesture.Alert.Label alertLabel;
         public PXCMGesture.Gesture.Label gestureLabel;
 
-        public MyParams()
+        public MyGestureParams()
         {
             nodeX = -1;
             nodeY = -1;

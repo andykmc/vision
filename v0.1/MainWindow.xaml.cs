@@ -54,13 +54,13 @@ namespace v0_1
             backgroundWorker1.ProgressChanged += new ProgressChangedEventHandler(this.backgroundWorker1_ProgressChanged);
             backgroundWorker1.RunWorkerCompleted += new RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
             backgroundWorker1.RunWorkerAsync();
-            backgroundWorker2 = new BackgroundWorker();
+            /*backgroundWorker2 = new BackgroundWorker();
             backgroundWorker2.WorkerReportsProgress = true;
             backgroundWorker2.WorkerSupportsCancellation = true;
             backgroundWorker2.DoWork += new DoWorkEventHandler(this.backgroundWorker2_DoWork);
-            //backgroundWorker2.ProgressChanged += new ProgressChangedEventHandler(this.backgroundWorker2_ProgressChanged);
+            backgroundWorker2.ProgressChanged += new ProgressChangedEventHandler(this.backgroundWorker2_ProgressChanged);
             //backgroundWorker2.RunWorkerCompleted += new RunWorkerCompletedEventHandler(this.backgroundWorker2_RunWorkerCompleted);
-            backgroundWorker2.RunWorkerAsync();
+            backgroundWorker2.RunWorkerAsync();*/
             hitResultsList = new List<DependencyObject>();
             opennesThreadshold = 20;
             needDebouncing = false;
@@ -91,24 +91,40 @@ namespace v0_1
             MessageBox.Show("Voice pipline initialized");
             while (true)
             {
+                //check if need to terminate the pipline when window is closing
+                if (backgroundWorker2.CancellationPending)
+                {
+                    pipeline.PauseVoiceRecognition(true);
+                    pipeline.ReleaseFrame();
+                    pipeline.Close();
+                    pipeline.Dispose();
+                    MessageBox.Show("stop backgroundWorker2");
+                    e.Cancel = true; return;
+                }
+
                 if (pipeline.AcquireFrame(true))
                 {
-                    var detectedPhrase = pipeline.getDetectedPhrase();
-                    if (detectedPhrase != "")
+                    if (pipeline.IsAudioFrame())
                     {
-                        MessageBox.Show(detectedPhrase);
+                        MyVoiceParams detectedVoiceParams = pipeline.getDetectedPhrase();
+                        if (detectedVoiceParams.detectedPhrase != "")
+                        {
+                            backgroundWorker2.ReportProgress(1, detectedVoiceParams);
+                        }
+                    }
+                    else
+                    {
+                        pipeline.ReleaseFrame();
+                        continue;
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Failed to initialize or stream data");
+                    MessageBox.Show("Failed to initialize VoicePipeline");
                     break;
                 }
 
-                pipeline.ReleaseFrame();
-                //check if need to terminate the pipline when window is closing
-                if (backgroundWorker2.CancellationPending)
-                { pipeline.Dispose(); e.Cancel = true; return; }
+                pipeline.ReleaseFrame();                
             }
             pipeline.Close();
             pipeline.Dispose();
@@ -116,46 +132,84 @@ namespace v0_1
 
         public void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
-            MyPipeline pipeline = new MyPipeline();
+            GesturePipeline pipeline = new GesturePipeline();
             PXCMGesture.Alert.Label alertLabel = PXCMGesture.Alert.Label.LABEL_ANY;
-            MyParams geoNodeParams = new MyParams();
+            MyGestureParams geoNodeParams = new MyGestureParams();
 
             pipeline.Init();
             MessageBox.Show("Gesture pipline initialized");
+            backgroundWorker1.ReportProgress(2);
             while (true)
             {
-                if (pipeline.AcquireFrame(false))
+                //check if need to terminate the pipline when window is closing
+                if (backgroundWorker1.CancellationPending)
                 {
-                    if (alertLabel != pipeline.geoNodeParams.alertLabel)
-                    { alertLabel = pipeline.geoNodeParams.alertLabel; }
-                    //check existance of geoNode
-                    if ((alertLabel != PXCMGesture.Alert.Label.LABEL_ANY) &&
-                        (alertLabel != PXCMGesture.Alert.Label.LABEL_GEONODE_INACTIVE) &&
-                        (alertLabel != PXCMGesture.Alert.Label.LABEL_FOV_BLOCKED))
+                    pipeline.PauseGesture(true);
+                    pipeline.ReleaseFrame();
+                    pipeline.Close();
+                    pipeline.Dispose();
+                    MessageBox.Show("stop backgroundWorker1");
+                    e.Cancel = true; return;
+                }
+
+                if (pipeline.AcquireFrame(true))
+                {
+                    if (pipeline.IsImageFrame())
                     {
-                        geoNodeParams = pipeline.geoNodeParams;
-                        alertLabel = geoNodeParams.alertLabel;
-                        backgroundWorker1.ReportProgress(1, geoNodeParams);
+                        if (alertLabel != pipeline.geoNodeParams.alertLabel)
+                        { alertLabel = pipeline.geoNodeParams.alertLabel; }
+                        //check existance of geoNode
+                        if ((alertLabel != PXCMGesture.Alert.Label.LABEL_ANY) &&
+                            (alertLabel != PXCMGesture.Alert.Label.LABEL_GEONODE_INACTIVE) &&
+                            (alertLabel != PXCMGesture.Alert.Label.LABEL_FOV_BLOCKED))
+                        {
+                            geoNodeParams = pipeline.geoNodeParams;
+                            alertLabel = geoNodeParams.alertLabel;
+                            backgroundWorker1.ReportProgress(1, geoNodeParams);
+                        }
+                        else
+                        {
+                            geoNodeParams.reset();
+                            geoNodeParams.alertLabel = alertLabel;
+                            backgroundWorker1.ReportProgress(1, geoNodeParams);
+                        }
                     }
                     else
                     {
-                        geoNodeParams.reset();
-                        geoNodeParams.alertLabel = alertLabel;
-                        backgroundWorker1.ReportProgress(1, geoNodeParams);
+                        pipeline.ReleaseFrame();
+                        continue;
                     }
                     if (!pipeline.ReleaseFrame()) break;
                 }
-                //check if need to terminate the pipline when window is closing
-                if (backgroundWorker1.CancellationPending)
-                { pipeline.Dispose(); e.Cancel = true; return; }
+                else
+                {
+                    MessageBox.Show("Failed to initialize GesturePipeline");
+                    break;
+                }
             }
             pipeline.Dispose();
         }
-        
+        private void backgroundWorker2_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            MyVoiceParams detectedVoiceParams = (MyVoiceParams)e.UserState;
+            MessageBox.Show("Phrase:" + detectedVoiceParams.detectedPhrase + " Confidence:" + detectedVoiceParams.confidenceLevel);
+        }
+
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {            
-            MyParams geoNodeParams = new MyParams();
-            geoNodeParams = (MyParams)e.UserState;
+        {
+            if (e.ProgressPercentage == 2)
+            {
+                backgroundWorker2 = new BackgroundWorker();
+                backgroundWorker2.WorkerReportsProgress = true;
+                backgroundWorker2.WorkerSupportsCancellation = true;
+                backgroundWorker2.DoWork += new DoWorkEventHandler(this.backgroundWorker2_DoWork);
+                backgroundWorker2.ProgressChanged += new ProgressChangedEventHandler(this.backgroundWorker2_ProgressChanged);
+                backgroundWorker2.RunWorkerAsync();
+                return;
+            }
+
+            MyGestureParams geoNodeParams = new MyGestureParams();
+            geoNodeParams = (MyGestureParams)e.UserState;
             MyGesturePath myPath = null;
             
             //move the hand
@@ -243,7 +297,7 @@ namespace v0_1
                         debouncingTimer = EasyTimer.SetTimeout(() =>
                         {
                             needDebouncing = false;                            
-                        }, 5000);
+                        }, 1000);
                     }
                     //Raise the InkCanvas mouse down event
                     //if (hoveredInkCanvas != null)

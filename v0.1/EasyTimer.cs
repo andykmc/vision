@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+/*
+ * Providing SetInterval and SetTimeout functions
+ */
 namespace v0_1
 {
     public static class EasyTimer

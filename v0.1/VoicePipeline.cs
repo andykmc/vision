@@ -15,8 +15,9 @@ namespace v0_1
         protected bool device_lost;
         bool voiceState;
         bool previousVoiceState;
-        public string alertLabel;
-        public string detectedPhrase;
+        string alertLabel;
+        string detectedPhrase;
+        uint confidenceLevel;
 
         public VoicePipeline()
             : base()
@@ -28,6 +29,7 @@ namespace v0_1
             previousVoiceState = false;
             alertLabel = "";
             detectedPhrase = "";
+            confidenceLevel = 0;
         }
 
         public override bool OnDisconnect()
@@ -58,18 +60,31 @@ namespace v0_1
         bool commandDetected()
         {
             if (voiceState != previousVoiceState && alertLabel == "")
-            {
+            {   
                 previousVoiceState = voiceState;
                 return true;
             }
             else return false;
         }
 
-        public string getDetectedPhrase()
+        public MyVoiceParams getDetectedPhrase()
         {
             if (commandDetected())
-                return detectedPhrase;
-            else return "";
+            {
+                MyVoiceParams myVoiceParams = new MyVoiceParams();
+                myVoiceParams.detectedPhrase = detectedPhrase;
+                myVoiceParams.alertLabel = "";
+                myVoiceParams.confidenceLevel = confidenceLevel;
+                return myVoiceParams;
+            }
+            else
+            {
+                MyVoiceParams myVoiceParams = new MyVoiceParams();
+                myVoiceParams.detectedPhrase = "";
+                myVoiceParams.alertLabel = alertLabel;
+                myVoiceParams.confidenceLevel = 0;
+                return myVoiceParams;
+            }
         }
 
         public override void OnRecognized(ref PXCMVoiceRecognition.Recognition data)
@@ -77,6 +92,7 @@ namespace v0_1
             voiceState = !voiceState;
             alertLabel = "";
             detectedPhrase = data.dictation;
+            confidenceLevel = data.confidence;
             /*
             string str;
             str = data.dictation;
