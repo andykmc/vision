@@ -14,6 +14,9 @@ using System.Xml;
 using System.Windows.Media.Animation;
 using System.ComponentModel;
 using System.Windows.Ink;
+using matching_test01;
+using MathWorks.MATLAB.NET.Arrays;
+using MathWorks.MATLAB.NET.Utility;
 
 namespace v0_1
 {
@@ -37,6 +40,8 @@ namespace v0_1
         int opennesThreadshold;
         bool needDebouncing;
         bool inkCanvasMouseDown;
+        bool bgwk1Running;
+        bool bgwk2Running;
         IDisposable debouncingTimer;
 
 		public MainWindow()
@@ -54,6 +59,7 @@ namespace v0_1
             backgroundWorker1.ProgressChanged += new ProgressChangedEventHandler(this.backgroundWorker1_ProgressChanged);
             backgroundWorker1.RunWorkerCompleted += new RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
             backgroundWorker1.RunWorkerAsync();
+
             /*backgroundWorker2 = new BackgroundWorker();
             backgroundWorker2.WorkerReportsProgress = true;
             backgroundWorker2.WorkerSupportsCancellation = true;
@@ -68,6 +74,8 @@ namespace v0_1
             hoveredInkCanvas = null;
             debouncingTimer = null;
             inkCanvasMouseDown = false;
+            bgwk1Running = false;
+            bgwk2Running = false;
 		}
 
         private void goDrawViewButton_Click(object sender, RoutedEventArgs e)
@@ -83,6 +91,7 @@ namespace v0_1
         }
         public void backgroundWorker2_DoWork(object sender, DoWorkEventArgs e)
         {
+            bgwk2Running = true;
             VoicePipeline pipeline = new VoicePipeline();
             pipeline.SetVoiceCommands();
             pipeline.EnableVoiceRecognition(0);
@@ -96,12 +105,13 @@ namespace v0_1
                 //check if need to terminate the pipline when window is closing
                 if (backgroundWorker2.CancellationPending)
                 {
-                    pipeline.PauseVoiceRecognition(true);
-                    pipeline.ReleaseFrame();
-                    pipeline.Close();
-                    pipeline.Dispose();
-                    MessageBox.Show("stop backgroundWorker2");
-                    e.Cancel = true; return;
+                    //pipeline.PauseVoiceRecognition(true);
+                    //pipeline.ReleaseFrame();
+                    //pipeline.Close();
+                    //pipeline.Dispose();
+                    //MessageBox.Show("stop backgroundWorker2");
+                    e.Cancel = true; 
+                    break;
                 }
 
                 if (pipeline.AcquireFrame(true))
@@ -128,12 +138,15 @@ namespace v0_1
 
                 pipeline.ReleaseFrame();
             }
+            pipeline.PauseVoiceRecognition(true);
             pipeline.Close();
             pipeline.Dispose();
+            bgwk2Running = false;
         }
 
         public void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
+            bgwk1Running = true;
             GesturePipeline pipeline = new GesturePipeline();
             PXCMGesture.Alert.Label alertLabel = PXCMGesture.Alert.Label.LABEL_ANY;
             MyGestureParams geoNodeParams = new MyGestureParams();
@@ -146,12 +159,13 @@ namespace v0_1
                 //check if need to terminate the pipline when window is closing
                 if (backgroundWorker1.CancellationPending)
                 {
-                    pipeline.PauseGesture(true);
-                    pipeline.ReleaseFrame();
-                    pipeline.Close();
-                    pipeline.Dispose();
-                    MessageBox.Show("stop backgroundWorker1");
-                    e.Cancel = true; return;
+                    //pipeline.PauseGesture(true);
+                    //pipeline.ReleaseFrame();
+                    //pipeline.Close();
+                    //pipeline.Dispose();
+                    //MessageBox.Show("going to stop backgroundWorker1");
+                    e.Cancel = true;
+                    break;
                 }
 
                 if (pipeline.AcquireFrame(true))
@@ -167,13 +181,13 @@ namespace v0_1
                         {
                             geoNodeParams = pipeline.geoNodeParams;
                             alertLabel = geoNodeParams.alertLabel;
-                            backgroundWorker1.ReportProgress(1, geoNodeParams);
+                            backgroundWorker1.ReportProgress(3, geoNodeParams);
                         }
                         else
                         {
                             geoNodeParams.reset();
                             geoNodeParams.alertLabel = alertLabel;
-                            backgroundWorker1.ReportProgress(1, geoNodeParams);
+                            backgroundWorker1.ReportProgress(3, geoNodeParams);
                         }
                     }
                     else
@@ -189,7 +203,11 @@ namespace v0_1
                     break;
                 }
             }
+            pipeline.PauseGesture(true);
+            pipeline.Close();
             pipeline.Dispose();
+            bgwk1Running = false;
+            //MessageBox.Show("stopping backgroundWorker1"); 
         }
         private void backgroundWorker2_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
@@ -375,7 +393,8 @@ namespace v0_1
         }
 
         public void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        { }
+        { //MessageBox.Show("stopped backgroundWorker1, is cancelled?" + e.Cancelled.ToString()); 
+        }
 
         //capture the events
         internal static void handler(object sender, RoutedEventArgs e)
@@ -482,15 +501,22 @@ namespace v0_1
         //terminate the pipline when window is closing
         private void Window_Closing(object sender, CancelEventArgs e)
         {
-            
             backgroundWorker1.CancelAsync();
             backgroundWorker2.CancelAsync();
+            while (bgwk1Running == true || bgwk2Running == true)
+            { }
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
         }
 
         private void previousViewButton_Click(object sender, RoutedEventArgs e)
         {
             viewControlHelper.gotoPreviousView();
         }
+
+        
 	}
 
     public enum views

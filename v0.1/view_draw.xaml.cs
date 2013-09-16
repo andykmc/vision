@@ -1,15 +1,20 @@
 ﻿using System;
+//using System.Net; //+
 using System.Collections.Generic;
+using System.ComponentModel;
+//using System.Data;//+
+using System.Windows.Data;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using System.ComponentModel;
+using MathWorks.MATLAB.NET.Arrays;
+using MathWorks.MATLAB.NET.Utility;
+using matching_test01;
 
 namespace v0_1
 {
@@ -17,9 +22,9 @@ namespace v0_1
 	{
         Window parentWindow;
         TextBox textBox;
-        ListBox viewList;
         ViewControlHelper viewControlHelper;
-        //ViewControlHelper viewControlHelper2;
+        BackgroundWorker backgroundWorkerMatch;
+
 		public view_draw()
 		{
 			InitializeComponent();
@@ -32,13 +37,63 @@ namespace v0_1
             parentWindow = Window.GetWindow(this);
             textBox = (TextBox)parentWindow.FindName("eventBox");
             viewControlHelper = ViewControlHelper.Instance;
+           
+            //backgroundWorker_match.RunWorkerCompleted += new RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
+        }
+
+        private void goResultViewButton_Click(object sender, RoutedEventArgs e)
+        {
+            InkCanvasUtil.SaveCanvas(parentWindow, WrapperCanvas, "sketch.jpg");
+            backgroundWorkerMatch = new BackgroundWorker();
+            backgroundWorkerMatch.WorkerReportsProgress = true;
+            backgroundWorkerMatch.WorkerSupportsCancellation = true;
+            backgroundWorkerMatch.DoWork += new DoWorkEventHandler(this.backgroundWorkerMatch_DoWork);
+            backgroundWorkerMatch.ProgressChanged += new ProgressChangedEventHandler(this.backgroundWorkerMatch_ProgressChanged);
+            backgroundWorkerMatch.RunWorkerCompleted += new RunWorkerCompletedEventHandler(this.backgroundWorkerMatch_RunWorkerCompleted);
+            backgroundWorkerMatch.RunWorkerAsync();
+        }
+
+        public void backgroundWorkerMatch_DoWork(object sender, DoWorkEventArgs e)
+        {
+            /*
+            MessageBox.Show("match initialize");
+            MatchingClass matchtest = null;
+            MWCharArray output = null;
+            MWArray MWresult = null;
+            
+            String r;
+            
+            matchtest = new MatchingClass();
+            MessageBox.Show("start match");
+            MWresult = matchtest.build_matching_test_correct_csharp2();
+            output = (MWCharArray)MWresult[1, 1];
+            r = output.ToString();
+            //MessageBox.Show("end match");
+            */
+            MessageBox.Show("start match");
+            string matchedClass = MatchingHelper.getMatchResult();
+            backgroundWorkerMatch.ReportProgress(99, matchedClass);
+        }
+
+        public void backgroundWorkerMatch_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            string result = e.UserState.ToString();
+            MatchingHelper.matchedClass = result;
+            MessageBox.Show("Matched result:"+MatchingHelper.matchedClass);
+            viewControlHelper.gotoView(views.view_result);
+        }
+
+        public void backgroundWorkerMatch_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            
         }
 
         private void testButton_Click(object sender, RoutedEventArgs e)
-        {
+        {   
             //Point position = e.GetPosition(this);
             //double x = position.X;
             //double y = position.Y;
+            
             Line linetodraw = new Line();
             linetodraw.X1 = 0;
             linetodraw.Y1 = 0;
@@ -49,31 +104,33 @@ namespace v0_1
             this.InkCanvas.Children.Add(linetodraw);
             InkCanvas.Strokes.Clear();
             
-            //int i = 0;
-            //cursor position is added by one due to testing 1px border on viewing canvas
+           
             /*
-            NativeMethods.SetCursorPos(
-                (int)Mouse.GetPosition(this).X + (int)Application.Current.MainWindow.Left + (int)SystemParameters.FixedFrameVerticalBorderWidth + 1 + 100,
-                (int)Mouse.GetPosition(this).Y + (int)Application.Current.MainWindow.Top + (int)SystemParameters.FixedFrameHorizontalBorderHeight + (int)SystemParameters.WindowCaptionHeight + 1
-            );
-            for (int i = 1; i <= 200; i++)
-            {
-                NativeMethods.SetCursorPos(
-                    (int)Mouse.GetPosition(this).X + (int)Application.Current.MainWindow.Left + (int)SystemParameters.FixedFrameVerticalBorderWidth + 1 + 100 + i,
-                    (int)Mouse.GetPosition(this).Y + (int)Application.Current.MainWindow.Top + (int)SystemParameters.FixedFrameHorizontalBorderHeight + (int)SystemParameters.WindowCaptionHeight + 1 + i
-                );
-                this.InkCanvas.RaiseEvent(new MouseButtonEventArgs(Mouse.PrimaryDevice, Environment.TickCount, MouseButton.Left) { RoutedEvent = InkCanvas.MouseDownEvent });
-            }
-            public partial class NativeMethods
-            {
-                /// Return Type: BOOL->int  
-                ///X: int  
-                ///Y: int  
-                [System.Runtime.InteropServices.DllImportAttribute("user32.dll", EntryPoint = "SetCursorPos")]
-                [return: System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.Bool)]
-                public static extern bool SetCursorPos(int X, int Y);
-            }
-            */
+           //int i = 0;
+           //cursor position is added by one due to testing 1px border on viewing canvas
+           
+           NativeMethods.SetCursorPos(
+               (int)Mouse.GetPosition(this).X + (int)Application.Current.MainWindow.Left + (int)SystemParameters.FixedFrameVerticalBorderWidth + 1 + 100,
+               (int)Mouse.GetPosition(this).Y + (int)Application.Current.MainWindow.Top + (int)SystemParameters.FixedFrameHorizontalBorderHeight + (int)SystemParameters.WindowCaptionHeight + 1
+           );
+           for (int i = 1; i <= 200; i++)
+           {
+               NativeMethods.SetCursorPos(
+                   (int)Mouse.GetPosition(this).X + (int)Application.Current.MainWindow.Left + (int)SystemParameters.FixedFrameVerticalBorderWidth + 1 + 100 + i,
+                   (int)Mouse.GetPosition(this).Y + (int)Application.Current.MainWindow.Top + (int)SystemParameters.FixedFrameHorizontalBorderHeight + (int)SystemParameters.WindowCaptionHeight + 1 + i
+               );
+               this.InkCanvas.RaiseEvent(new MouseButtonEventArgs(Mouse.PrimaryDevice, Environment.TickCount, MouseButton.Left) { RoutedEvent = InkCanvas.MouseDownEvent });
+           }
+           public partial class NativeMethods
+           {
+               /// Return Type: BOOL->int  
+               ///X: int  
+               ///Y: int  
+               [System.Runtime.InteropServices.DllImportAttribute("user32.dll", EntryPoint = "SetCursorPos")]
+               [return: System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.Bool)]
+               public static extern bool SetCursorPos(int X, int Y);
+           }
+           */
 
         }
 
@@ -289,11 +346,6 @@ namespace v0_1
         private void InkCanvas_TargetUpdated(object sender, DataTransferEventArgs e)
         {
             textBox.Text += "InkCanvas_TargetUpdated\n";
-        }
-
-        private void goResultViewButton_Click(object sender, RoutedEventArgs e)
-        {
-            viewControlHelper.gotoView(views.view_result);
-        }
+        }        
 	}
 }

@@ -11,8 +11,6 @@
     <RootNamespace>v0_1</RootNamespace>
     <AssemblyName>v0.1</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <ApplicationVersion>1.0.0.*</ApplicationVersion>
-    <ApplicationRevision>0</ApplicationRevision>
     <AlwaysCompileMarkupFilesInSeparateDomain>false</AlwaysCompileMarkupFilesInSeparateDomain>
     <ApplicationIcon>Application.ico</ApplicationIcon>
     <FileAlignment>512</FileAlignment>
@@ -23,8 +21,23 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>3.5</OldToolsVersion>
-    <TargetFrameworkProfile />
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <Utf8Output>true</Utf8Output>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -34,6 +47,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -44,8 +58,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="libpxcclr">
-      <HintPath>D:\Program Files (x86)\Intel\PCSDK\bin\x64\libpxcclr.dll</HintPath>
+    <Reference Include="libpxcclr, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Intel\PCSDK\bin\win32\libpxcclr.dll</HintPath>
+    </Reference>
+    <Reference Include="matching_test01, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\matching_test01.dll</HintPath>
+    </Reference>
+    <Reference Include="MWArray, Version=2.10.1.0, Culture=neutral, PublicKeyToken=e1d84a0da19db86f, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Software\MATLAB\R2010b\toolbox\dotnetbuilder\bin\win32\v2.0\MWArray.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -76,6 +99,9 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="EasyTimer.cs" />
+    <Compile Include="GestureControlHelper.cs" />
+    <Compile Include="InkCanvasUtil.cs" />
+    <Compile Include="MatchingHelper.cs" />
     <Compile Include="MyGesturePath.cs" />
     <Compile Include="MyGestureParams.cs" />
     <Compile Include="GesturePipeline.cs" />
@@ -97,6 +123,7 @@
     <Compile Include="view_voice.xaml.cs">
       <DependentUpon>view_voice.xaml</DependentUpon>
     </Compile>
+    <Compile Include="VoiceControlHelper.cs" />
     <Compile Include="VoicePipeline.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -136,6 +163,31 @@
     <Resource Include="icons\Fist_hand_paw_handwriting%284%29.png" />
     <Resource Include="icons\Hands-Whole-hand-icon.png" />
     <Resource Include="icons\mic_w.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

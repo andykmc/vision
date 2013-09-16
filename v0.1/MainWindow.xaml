@@ -4,7 +4,7 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	x:Class="v0_1.MainWindow"
 	x:Name="Window"
-	Title="MainWindow" mc:Ignorable="d" Width="755" Height="508" ResizeMode="NoResize" Closing="Window_Closing" MouseMove="Window_MouseMove">
+	Title="MainWindow" mc:Ignorable="d" Width="755" Height="508" ResizeMode="NoResize" Closing="Window_Closing" MouseMove="Window_MouseMove" Closed="Window_Closed">
 
 	<Window.Resources>
 	<!--**********************************************
