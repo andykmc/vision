@@ -7,21 +7,53 @@ using System.Windows.Controls;
 
 namespace v0_1
 {
-    public class ViewControlHelper
+    public sealed class ViewControlHelper
     {
+        static ViewControlHelper instance = null;
+        static readonly object padlock = new object();
+
         Window parentWindow;
         ListBox viewList;
-        //Label testLabel;
+        List<views> viewsHistory;
+        views currentView;
+        views viewChoosed;
+
+
         public List<views> previousViews;
-        public List<views> viewsHistory;
-        public views currentView;
+        //Label testLabel;
         //public bool needDebouncing;
         //IDisposable timer;
-        public views viewChoosed;
         
-        public ViewControlHelper(Window mainWindow, views rootView)
+
+        private ViewControlHelper()
         {
-            parentWindow = mainWindow;
+            parentWindow = App.Current.MainWindow;
+            viewList = (ListBox)parentWindow.FindName("viewList");
+            viewsHistory = new List<views>();
+            currentView = views.view_home;
+            viewsHistory.Add(currentView);
+            viewChoosed = views.view_none;
+        }
+
+        public static ViewControlHelper Instance
+        {
+            get
+            {
+                lock (padlock)
+                {
+                    if (instance == null)
+                    {
+                        instance = new ViewControlHelper();
+                    }
+                    return instance;
+                }
+            }
+        }
+
+        /*public ViewControlHelper(Window mainWindow, views rootView)
+        {
+            //parentWindow = mainWindow;
+            parentWindow = App.Current.MainWindow;
             viewList = (ListBox)parentWindow.FindName("viewList");
             //testLabel = (Label)parentWindow.FindName("testLabel");
             previousViews = new List<views>();
@@ -30,22 +62,16 @@ namespace v0_1
             viewsHistory.Add(rootView);
             //needDebouncing = false;
             viewChoosed = views.view_none;
-        }
+        }*/
 
         public void gotoView(views view)
         {   
             //if (getCurrentView() != view && needDebouncing == false)
             if (currentView != view)
             {
-                /*
                 viewChoosed = view;
-                addPreviousView(currentView);
-                setCurrentView(view);
-                viewList.SelectedIndex = (int)view;*/
-
-                viewChoosed = view;
-                currentView = view;
-                //viewsHistory.Add(view);
+                currentView = viewChoosed;
+                viewsHistory.Add(view);
                 viewList.SelectedIndex = (int)view;
 
                 //needDebouncing = true;
@@ -60,16 +86,7 @@ namespace v0_1
         }
 
         public void gotoPreviousView()
-        {   
-            /*
-            if (previousViews.Count > 0)
-            {
-                viewChoosed = getPreviousView();
-                setCurrentView(getPreviousView());
-                removePreviousView();
-                viewList.SelectedIndex = (int)currentView;                
-            }
-             */
+        {
             if (viewsHistory.Count > 1)
             {   
                 viewsHistory.RemoveAt(viewsHistory.Count - 1);
@@ -79,43 +96,26 @@ namespace v0_1
             }
             //testLabel.Content = previousViews.Count().ToString();
         }
-        /*
-        public void gotoHomeView()
-        {
-            resetPreviousViews();
-            setCurrentView(views.view_home);
-            viewList.SelectedIndex = (int)views.view_home;
-        }
-
-        public void setCurrentView(views view)
-        {
-            currentView = view;
-        }
-
-        public void addPreviousView(views view)
-        {
-            previousViews.Add(view);
-        }
 
         public views getCurrentView()
         {
             return currentView;
         }
 
-        public views getPreviousView()
+        public views getViewChoosed()
         {
-            return previousViews.Last();
+            return viewChoosed;
         }
 
-        public void removePreviousView()
+        public List<views> getViewsHistory()
         {
-            previousViews.RemoveAt(previousViews.Count - 1);
+            return viewsHistory;
         }
 
-        public void resetPreviousViews()
+        public void gotoHomeView()
         {
-            previousViews = new List<views>();
+            viewsHistory.Clear();
+            gotoView(views.view_home);
         }
-         */
     }
 }

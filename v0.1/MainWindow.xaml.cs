@@ -45,7 +45,7 @@ namespace v0_1
             //for viewer animation effect
             animatedViewer = new AnimatedViewer(this);
             //for changing pages
-            viewControlHelper = new ViewControlHelper(this, views.view_home);
+            viewControlHelper = ViewControlHelper.Instance;
             //for gesture control
             backgroundWorker1 = new BackgroundWorker();
             backgroundWorker1.WorkerReportsProgress = true;
@@ -72,14 +72,14 @@ namespace v0_1
 
         private void goDrawViewButton_Click(object sender, RoutedEventArgs e)
         {
-            viewList.SelectedIndex = (int)views.view_draw;
-            //viewControlHelper.gotoView(views.view_draw);
+            //viewList.SelectedIndex = (int)views.view_draw;
+            viewControlHelper.gotoView(views.view_draw);
         }
 
         private void goVoiceViewButton_Click(object sender, RoutedEventArgs e)
         {
-            viewList.SelectedIndex = (int)views.view_voice;
-            //viewControlHelper.gotoView(views.view_voice);
+            //viewList.SelectedIndex = (int)views.view_voice;
+            viewControlHelper.gotoView(views.view_voice);
         }
         public void backgroundWorker2_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -356,13 +356,13 @@ namespace v0_1
                 this.hand_grip.Visibility = Visibility.Hidden;
             }
             var viewString = "Views:";
-            foreach (var view in viewControlHelper.previousViews)
+            foreach (var view in viewControlHelper.getViewsHistory())
             {
                 viewString += view.ToString() + ",";
             }
             this.testLabel.Content = viewString;
             //this.testLabel.Content = viewControlHelper.previousViews.Count().ToString();
-            this.currentPageLabel.Content = viewControlHelper.currentView.ToString();
+            this.currentPageLabel.Content = viewControlHelper.getCurrentView().ToString();
             this.debouncingLabel.Content = needDebouncing.ToString();
 
             //capture the events
@@ -386,7 +386,7 @@ namespace v0_1
         //Render the captured view into the Rectangle
         private void viewList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            viewControlHelper.viewsHistory.Add((views)viewList.SelectedIndex);
+            //viewControlHelper.viewsHistory.Add((views)viewList.SelectedIndex);
             animatedViewer.RenderCapturedView();
         }
         //For controlling the cursor
