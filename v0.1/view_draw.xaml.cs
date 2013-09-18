@@ -23,7 +23,7 @@ namespace v0_1
         Window parentWindow;
         TextBox textBox;
         ViewControlHelper viewControlHelper;
-        BackgroundWorker backgroundWorkerMatch;
+        AbortableBackgroundWorker backgroundWorkerMatch;
 
 		public view_draw()
 		{
@@ -37,20 +37,21 @@ namespace v0_1
             parentWindow = Window.GetWindow(this);
             textBox = (TextBox)parentWindow.FindName("eventBox");
             viewControlHelper = ViewControlHelper.Instance;
-           
-            //backgroundWorker_match.RunWorkerCompleted += new RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
-        }
-
-        private void goResultViewButton_Click(object sender, RoutedEventArgs e)
-        {
-            InkCanvasUtil.SaveCanvas(parentWindow, WrapperCanvas, "sketch.jpg");
-            backgroundWorkerMatch = new BackgroundWorker();
+            backgroundWorkerMatch = new AbortableBackgroundWorker();
             backgroundWorkerMatch.WorkerReportsProgress = true;
             backgroundWorkerMatch.WorkerSupportsCancellation = true;
             backgroundWorkerMatch.DoWork += new DoWorkEventHandler(this.backgroundWorkerMatch_DoWork);
             backgroundWorkerMatch.ProgressChanged += new ProgressChangedEventHandler(this.backgroundWorkerMatch_ProgressChanged);
             backgroundWorkerMatch.RunWorkerCompleted += new RunWorkerCompletedEventHandler(this.backgroundWorkerMatch_RunWorkerCompleted);
-            backgroundWorkerMatch.RunWorkerAsync();
+        }
+
+        private void goResultViewButton_Click(object sender, RoutedEventArgs e)
+        {   
+            if (backgroundWorkerMatch.IsBusy == false)
+            {
+                InkCanvasUtil.SaveCanvas(parentWindow, WrapperCanvas, "sketch.jpg");
+                backgroundWorkerMatch.RunWorkerAsync(); 
+            }
         }
 
         public void backgroundWorkerMatch_DoWork(object sender, DoWorkEventArgs e)
@@ -71,21 +72,19 @@ namespace v0_1
             //MessageBox.Show("end match");
             */
             MessageBox.Show("start match");
-            string matchedClass = MatchingHelper.getMatchResult();
-            backgroundWorkerMatch.ReportProgress(99, matchedClass);
+            MatchingHelper.matchClass();
+            //backgroundWorkerMatch.ReportProgress(100);
         }
 
         public void backgroundWorkerMatch_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            string result = e.UserState.ToString();
-            MatchingHelper.matchedClass = result;
-            MessageBox.Show("Matched result:"+MatchingHelper.matchedClass);
-            viewControlHelper.gotoView(views.view_result);
-        }
+        {}
 
         public void backgroundWorkerMatch_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            
+            MessageBox.Show("Matched result:" + MatchingHelper.matchedClass);
+            backgroundWorkerMatch.Abort();
+            backgroundWorkerMatch.Dispose();
+            viewControlHelper.gotoView(views.view_result);
         }
 
         private void testButton_Click(object sender, RoutedEventArgs e)
@@ -347,5 +346,5 @@ namespace v0_1
         {
             textBox.Text += "InkCanvas_TargetUpdated\n";
         }        
-	}
+	}    
 }

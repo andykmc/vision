@@ -59,14 +59,14 @@ namespace v0_1
             backgroundWorker1.ProgressChanged += new ProgressChangedEventHandler(this.backgroundWorker1_ProgressChanged);
             backgroundWorker1.RunWorkerCompleted += new RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
             backgroundWorker1.RunWorkerAsync();
-
-            /*backgroundWorker2 = new BackgroundWorker();
+            backgroundWorker2 = new BackgroundWorker();
             backgroundWorker2.WorkerReportsProgress = true;
             backgroundWorker2.WorkerSupportsCancellation = true;
             backgroundWorker2.DoWork += new DoWorkEventHandler(this.backgroundWorker2_DoWork);
             backgroundWorker2.ProgressChanged += new ProgressChangedEventHandler(this.backgroundWorker2_ProgressChanged);
-            //backgroundWorker2.RunWorkerCompleted += new RunWorkerCompletedEventHandler(this.backgroundWorker2_RunWorkerCompleted);
-            backgroundWorker2.RunWorkerAsync();*/
+            backgroundWorker2.RunWorkerCompleted += new RunWorkerCompletedEventHandler(this.backgroundWorker2_RunWorkerCompleted);
+            //backgroundWorker2 is after backgroundWorker1
+            
             hitResultsList = new List<DependencyObject>();
             opennesThreadshold = 20;
             needDebouncing = false;
@@ -74,8 +74,8 @@ namespace v0_1
             hoveredInkCanvas = null;
             debouncingTimer = null;
             inkCanvasMouseDown = false;
-            bgwk1Running = false;
-            bgwk2Running = false;
+            bgwk1Running = false;//needed since backgroundWorker1.IsBusy is always true, might need further investigation
+            bgwk2Running = false;//needed since backgroundWorker2.IsBusy is always true, might need further investigation
 		}
 
         private void goDrawViewButton_Click(object sender, RoutedEventArgs e)
@@ -89,60 +89,6 @@ namespace v0_1
             //viewList.SelectedIndex = (int)views.view_voice;
             viewControlHelper.gotoView(views.view_voice);
         }
-        public void backgroundWorker2_DoWork(object sender, DoWorkEventArgs e)
-        {
-            bgwk2Running = true;
-            VoicePipeline pipeline = new VoicePipeline();
-            pipeline.SetVoiceCommands();
-            pipeline.EnableVoiceRecognition(0);
-            if (!pipeline.Init())
-            {
-                return;
-            }
-            MessageBox.Show("Voice pipline initialized");
-            while (true)
-            {
-                //check if need to terminate the pipline when window is closing
-                if (backgroundWorker2.CancellationPending)
-                {
-                    //pipeline.PauseVoiceRecognition(true);
-                    //pipeline.ReleaseFrame();
-                    //pipeline.Close();
-                    //pipeline.Dispose();
-                    //MessageBox.Show("stop backgroundWorker2");
-                    e.Cancel = true; 
-                    break;
-                }
-
-                if (pipeline.AcquireFrame(true))
-                {
-                    if (pipeline.IsAudioFrame())
-                    {
-                        MyVoiceParams detectedVoiceParams = pipeline.getDetectedPhrase();
-                        if (detectedVoiceParams.detectedPhrase != "")
-                        {
-                            backgroundWorker2.ReportProgress(1, detectedVoiceParams);
-                        }
-                    }
-                    else
-                    {
-                        pipeline.ReleaseFrame();
-                        continue;
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("Failed to initialize VoicePipeline");
-                    break;
-                }
-
-                pipeline.ReleaseFrame();
-            }
-            pipeline.PauseVoiceRecognition(true);
-            pipeline.Close();
-            pipeline.Dispose();
-            bgwk2Running = false;
-        }
 
         public void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -150,20 +96,14 @@ namespace v0_1
             GesturePipeline pipeline = new GesturePipeline();
             PXCMGesture.Alert.Label alertLabel = PXCMGesture.Alert.Label.LABEL_ANY;
             MyGestureParams geoNodeParams = new MyGestureParams();
-
             pipeline.Init();
-            MessageBox.Show("Gesture pipline initialized");
-            backgroundWorker1.ReportProgress(2);
+            if (MessageBox.Show("Initialise Voice pipeline?", "", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            { backgroundWorker1.ReportProgress(1); }
             while (true)
             {
                 //check if need to terminate the pipline when window is closing
                 if (backgroundWorker1.CancellationPending)
                 {
-                    //pipeline.PauseGesture(true);
-                    //pipeline.ReleaseFrame();
-                    //pipeline.Close();
-                    //pipeline.Dispose();
-                    //MessageBox.Show("going to stop backgroundWorker1");
                     e.Cancel = true;
                     break;
                 }
@@ -204,27 +144,68 @@ namespace v0_1
                 }
             }
             pipeline.PauseGesture(true);
+            //pipeline.ReleaseFrame();
             pipeline.Close();
             pipeline.Dispose();
             bgwk1Running = false;
             //MessageBox.Show("stopping backgroundWorker1"); 
         }
-        private void backgroundWorker2_ProgressChanged(object sender, ProgressChangedEventArgs e)
+
+        public void backgroundWorker2_DoWork(object sender, DoWorkEventArgs e)
         {
-            MyVoiceParams detectedVoiceParams = (MyVoiceParams)e.UserState;
-            if (detectedVoiceParams.alertLabel == "" && detectedVoiceParams.confidenceLevel > 40)
-            { MessageBox.Show("Phrase:" + detectedVoiceParams.detectedPhrase + " Confidence:" + detectedVoiceParams.confidenceLevel + " Alert:" + detectedVoiceParams.alertLabel); }
+            bgwk2Running = true;
+            VoicePipeline pipeline = new VoicePipeline();
+            pipeline.SetVoiceCommands();
+            pipeline.EnableVoiceRecognition(0);
+            if (!pipeline.Init())
+            {
+                return;
+            }
+            //MessageBox.Show("Voice pipline initialized");
+            while (true)
+            {
+                //check if need to terminate the pipline when window is closing
+                if (backgroundWorker2.CancellationPending)
+                {   
+                    e.Cancel = true;
+                    break;
+                }
+
+                if (pipeline.AcquireFrame(true))
+                {
+                    if (pipeline.IsAudioFrame())
+                    {
+                        MyVoiceParams detectedVoiceParams = pipeline.getDetectedPhrase();
+                        if (detectedVoiceParams.detectedPhrase != "")
+                        {
+                            backgroundWorker2.ReportProgress(1, detectedVoiceParams);
+                        }
+                    }
+                    else
+                    {
+                        pipeline.ReleaseFrame();
+                        continue;
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Failed to initialize VoicePipeline");
+                    break;
+                }
+
+                pipeline.ReleaseFrame();
+            }
+            pipeline.PauseVoiceRecognition(true);
+            //pipeline.ReleaseFrame();
+            pipeline.Close();
+            pipeline.Dispose();
+            bgwk2Running = false;
         }
 
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            if (e.ProgressPercentage == 2)
-            {
-                backgroundWorker2 = new BackgroundWorker();
-                backgroundWorker2.WorkerReportsProgress = true;
-                backgroundWorker2.WorkerSupportsCancellation = true;
-                backgroundWorker2.DoWork += new DoWorkEventHandler(this.backgroundWorker2_DoWork);
-                backgroundWorker2.ProgressChanged += new ProgressChangedEventHandler(this.backgroundWorker2_ProgressChanged);
+            if (e.ProgressPercentage == 1)
+            {   
                 backgroundWorker2.RunWorkerAsync();
                 return;
             }
@@ -268,16 +249,9 @@ namespace v0_1
                     this.hand_palm.Visibility = Visibility.Visible;
                     this.hand_grip.Visibility = Visibility.Hidden;
 
-                    //Raise the InkCanvas mouse up event
-                    //if (hoveredInkCanvas != null)
-                    if (hoveredInkCanvas != null && inkCanvasMouseDown == true)
-                    {
-                        //======Start of method 1========
-                        hoveredInkCanvas.RaiseEvent(new MouseButtonEventArgs(Mouse.PrimaryDevice, Environment.TickCount, MouseButton.Left) { RoutedEvent = InkCanvas.MouseUpEvent });
-                        inkCanvasMouseDown = false;
-                        hoveredInkCanvas.ReleaseMouseCapture();
-                        //=======End of method 1=========
-                    }
+                    //======Start of method 1========
+                    raiseInkCanvasMouseEvent("MouseUpEvent");
+                    //======End of method 1========
                 }
                 else if (geoNodeParams.opennes >= 0 && geoNodeParams.opennes <= opennesThreadshold)
                 {
@@ -324,17 +298,9 @@ namespace v0_1
                     //if (hoveredInkCanvas != null)
                     if (hoveredInkCanvas != null && inkCanvasMouseDown == false)
                     {
-                        //======Start of method 1========(to be used with Raising InkcCanvas mouse down event)
-                        /* Problem: can not correct show the drawn immediately, of shown after finishing one stroke
-                         * Findings: 1. this method is done by simulating mouse down event
-                         *           2. may be missing the event for adding stroke to stroke property of InkCanvas
-                         */
-                        inkCanvasMouseDown = true;
-                        hoveredInkCanvas.Focus();
-                        hoveredInkCanvas.CaptureMouse();
-                        hoveredInkCanvas.RaiseEvent(new MouseButtonEventArgs(Mouse.PrimaryDevice, Environment.TickCount, MouseButton.Left) { RoutedEvent = InkCanvas.MouseDownEvent });
-                        //=======End of method 1=========
-
+                        //======Start of method 1========
+                        raiseInkCanvasMouseEvent("MouseDownEvent");
+                        //======End of method 1========
                         
                         //======Start of method 2========
                         /*
@@ -349,7 +315,7 @@ namespace v0_1
                         linetodraw.Stroke = new SolidColorBrush(Colors.Black);
                         this.hoveredInkCanvas.Children.Add(linetodraw);
                         */
-                        //=======End of method 1=========
+                        //=======End of method 2=========
 
                         //======Method 3 under investigation=====
                         /*
@@ -358,6 +324,7 @@ namespace v0_1
                         Stroke stroke = new Stroke();
                         strokeCollection.
                         */
+                        //======Method 3 under investigation=====
                     }
                 }
                 //if (geoNodeParams.opennes <= opennesThreadshold) selectable = false;
@@ -372,6 +339,9 @@ namespace v0_1
             {
                 this.hand_palm.Visibility = Visibility.Hidden;
                 this.hand_grip.Visibility = Visibility.Hidden;
+                //======Start of method 1========
+                raiseInkCanvasMouseEvent("MouseUpEvent");
+                //======End of method 1========
             }
             var viewString = "Views:";
             foreach (var view in viewControlHelper.getViewsHistory())
@@ -392,8 +362,52 @@ namespace v0_1
             eventBox.ScrollToEnd();
         }
 
+        private void backgroundWorker2_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            MyVoiceParams detectedVoiceParams = (MyVoiceParams)e.UserState;
+            if (detectedVoiceParams.alertLabel == "" && detectedVoiceParams.confidenceLevel > 40)
+            { MessageBox.Show("Phrase:" + detectedVoiceParams.detectedPhrase + " Confidence:" + detectedVoiceParams.confidenceLevel + " Alert:" + detectedVoiceParams.alertLabel); }
+        }
+
         public void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         { //MessageBox.Show("stopped backgroundWorker1, is cancelled?" + e.Cancelled.ToString()); 
+        }
+
+        public void backgroundWorker2_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        { //MessageBox.Show("stopped backgroundWorker2, is cancelled?" + e.Cancelled.ToString()); 
+        }
+
+        //For controlling the InkCanvas
+        private void raiseInkCanvasMouseEvent(string eventName)
+        {
+            switch (eventName)
+            {
+                case "MouseUpEvent":
+                    //Raise the InkCanvas mouse up event
+                    //if (hoveredInkCanvas != null)
+                    if (hoveredInkCanvas != null && inkCanvasMouseDown == true)
+                    {
+                        //======Start of method 1========
+                        hoveredInkCanvas.RaiseEvent(new MouseButtonEventArgs(Mouse.PrimaryDevice, Environment.TickCount, MouseButton.Left) { RoutedEvent = InkCanvas.MouseUpEvent });
+                        inkCanvasMouseDown = false;
+                        hoveredInkCanvas.ReleaseMouseCapture();
+                        //=======End of method 1=========
+                    }
+                    break;
+                case "MouseDownEvent":
+                    //======Start of method 1========(to be used with Raising InkcCanvas mouse down event)
+                    /* Problem: can not correct show the drawn immediately, of shown after finishing one stroke
+                     * Findings: 1. this method is done by simulating mouse down event
+                     *           2. may be missing the event for adding stroke to stroke property of InkCanvas
+                     */
+                    inkCanvasMouseDown = true;
+                    hoveredInkCanvas.Focus();
+                    hoveredInkCanvas.CaptureMouse();
+                    hoveredInkCanvas.RaiseEvent(new MouseButtonEventArgs(Mouse.PrimaryDevice, Environment.TickCount, MouseButton.Left) { RoutedEvent = InkCanvas.MouseDownEvent });
+                    //=======End of method 1=========
+                    break;
+            }
+
         }
 
         //capture the events
@@ -498,17 +512,24 @@ namespace v0_1
                 return HitTestFilterBehavior.Continue;
             }
         }
-        //terminate the pipline when window is closing
+        //Terminate the piplines correctly when window is closing
         private void Window_Closing(object sender, CancelEventArgs e)
-        {
-            backgroundWorker1.CancelAsync();
-            backgroundWorker2.CancelAsync();
+        {   
+            if (backgroundWorker1.IsBusy)
+            {
+                backgroundWorker1.CancelAsync();
+            }
+            if (backgroundWorker2.IsBusy)
+            {
+                backgroundWorker2.CancelAsync();
+            }
             while (bgwk1Running == true || bgwk2Running == true)
             { }
         }
 
         private void Window_Closed(object sender, EventArgs e)
         {
+            
         }
 
         private void previousViewButton_Click(object sender, RoutedEventArgs e)

@@ -10,7 +10,7 @@ namespace v0_1
     public static class MatchingHelper
     {
         public static string matchedClass;
-        public static string getMatchResult()
+        public static string matchClass()
         {
             //MessageBox.Show("match initialize");
             MatchingClass matchtest = null;
@@ -21,7 +21,8 @@ namespace v0_1
             //MessageBox.Show("start match");
             MWresult = matchtest.build_matching_test_correct_csharp2();
             output = (MWCharArray)MWresult[1, 1];
-            return output.ToString();
+            matchedClass = output.ToString();
+            return matchedClass;
         }
     }
 }
