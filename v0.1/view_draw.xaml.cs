@@ -56,24 +56,8 @@ namespace v0_1
 
         public void backgroundWorkerMatch_DoWork(object sender, DoWorkEventArgs e)
         {
-            /*
-            MessageBox.Show("match initialize");
-            MatchingClass matchtest = null;
-            MWCharArray output = null;
-            MWArray MWresult = null;
-            
-            String r;
-            
-            matchtest = new MatchingClass();
-            MessageBox.Show("start match");
-            MWresult = matchtest.build_matching_test_correct_csharp2();
-            output = (MWCharArray)MWresult[1, 1];
-            r = output.ToString();
-            //MessageBox.Show("end match");
-            */
             MessageBox.Show("start match");
             MatchingHelper.matchClass();
-            //backgroundWorkerMatch.ReportProgress(100);
         }
 
         public void backgroundWorkerMatch_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -81,7 +65,7 @@ namespace v0_1
 
         public void backgroundWorkerMatch_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            MessageBox.Show("Matched result:" + MatchingHelper.matchedClass);
+            //MessageBox.Show("Matched result:" + MatchingHelper.matchedClass);
             backgroundWorkerMatch.Abort();
             backgroundWorkerMatch.Dispose();
             viewControlHelper.gotoView(views.view_result);
