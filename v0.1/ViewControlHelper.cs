@@ -97,6 +97,12 @@ namespace v0_1
             //testLabel.Content = previousViews.Count().ToString();
         }
 
+        public void gotoVoiceViewDirectly()
+        {
+            gotoHomeView();
+            gotoView(views.view_voice);
+        }
+
         public views getCurrentView()
         {
             return currentView;
@@ -115,6 +121,7 @@ namespace v0_1
         public void gotoHomeView()
         {
             viewsHistory.Clear();
+            currentView = views.view_none;
             gotoView(views.view_home);
         }
     }

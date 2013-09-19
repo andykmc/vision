@@ -127,6 +127,7 @@
     <Compile Include="view_voice.xaml.cs">
       <DependentUpon>view_voice.xaml</DependentUpon>
     </Compile>
+    <Compile Include="VoiceControlHelper.cs" />
     <Compile Include="VoicePipeline.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

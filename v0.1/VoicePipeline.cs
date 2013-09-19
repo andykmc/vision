@@ -10,7 +10,7 @@ namespace v0_1
         string[] wstr = new string[] {"select", "selecting", "selecting mode", "rank", "ranking", "ranking mode", "swap forward", 
                 "swap back", "reset", "restart", "cat", "kitty", "aeroplane", "plane", "dog", "puppy", "donut", "Eiffel Tower", "tower", 
                 "Tom Mason", "Taylor Swift", "T-shirt", "tennis racket", "apple", "eyeglasses", "hourglass", "Moon", "sun", "revolver", 
-                "gun", "hamburger", "pumpkin", "ladder", "skull", "car", "I MuSe"};
+                "gun", "hamburger", "pumpkin", "ladder", "skull", "car", "I MuSe", "search", "go to home", "back to home", "done"};
         protected int nframes;
         protected bool device_lost;
         bool voiceState;

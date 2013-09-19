@@ -51,6 +51,7 @@ namespace v0_1
             animatedViewer = new AnimatedViewer(this);
             //for changing pages
             viewControlHelper = ViewControlHelper.Instance;
+            VoiceControlHelper.Initialize(viewControlHelper);//initailize voice control
             //for gesture control
             backgroundWorker1 = new BackgroundWorker();
             backgroundWorker1.WorkerReportsProgress = true;
@@ -363,10 +364,9 @@ namespace v0_1
         }
 
         private void backgroundWorker2_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            MyVoiceParams detectedVoiceParams = (MyVoiceParams)e.UserState;
-            if (detectedVoiceParams.alertLabel == "" && detectedVoiceParams.confidenceLevel > 40)
-            { MessageBox.Show("Phrase:" + detectedVoiceParams.detectedPhrase + " Confidence:" + detectedVoiceParams.confidenceLevel + " Alert:" + detectedVoiceParams.alertLabel); }
+        {   
+            VoiceControlHelper.detectedVoiceParams = ((MyVoiceParams)e.UserState);
+            VoiceControlHelper.RunVoiceControl();
         }
 
         public void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)

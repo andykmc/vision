@@ -7,7 +7,7 @@ using MathWorks.MATLAB.NET.Arrays;
 
 namespace v0_1
 {
-    public static class MatchingHelper
+    static class MatchingHelper
     {
         public static string matchedClass;
         public static string matchClass()
