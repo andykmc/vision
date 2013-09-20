@@ -176,6 +176,46 @@
 				</Setter.Value>
 			</Setter>
 		</Style>
+        <Style x:Key="new_ButtonStyle3" TargetType="{x:Type Button}">
+        	<Setter Property="Template">
+        		<Setter.Value>
+        			<ControlTemplate TargetType="{x:Type Button}">
+        				<Grid>
+        					<Ellipse StrokeThickness="5" Stroke="#FFA671E9">
+        						<Ellipse.Fill>
+        							<RadialGradientBrush GradientOrigin="-0.5,-0.5" Center="0.5,0.5" RadiusX="0.8" RadiusY="0.8">
+        								<GradientStop Color="#FFA26FD8"/>
+        								<GradientStop Color="#FF2C005A" Offset="1"/>
+        							</RadialGradientBrush>
+        						</Ellipse.Fill>
+        					</Ellipse>
+        					<Rectangle Margin="21.478,19.96,21.938,21" StrokeThickness="5" RenderTransformOrigin="0.5,0.5">
+        						<Rectangle.RenderTransform>
+        							<TransformGroup>
+        								<ScaleTransform/>
+        								<SkewTransform/>
+        								<RotateTransform/>
+        								<TranslateTransform/>
+        							</TransformGroup>
+        						</Rectangle.RenderTransform>
+        						<Rectangle.Fill>
+        							<ImageBrush ImageSource="draw_icon2.png"/>
+        						</Rectangle.Fill>
+        					</Rectangle>
+		
+        					<ContentPresenter HorizontalAlignment="Left" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="Top" Margin="8,8,0,0" Visibility="Hidden"/>
+        				</Grid>
+        				<ControlTemplate.Triggers>
+        					<Trigger Property="IsFocused" Value="True"/>
+        					<Trigger Property="IsDefaulted" Value="True"/>
+        					<Trigger Property="IsMouseOver" Value="True"/>
+        					<Trigger Property="IsPressed" Value="True"/>
+        					<Trigger Property="IsEnabled" Value="False"/>
+        				</ControlTemplate.Triggers>
+        			</ControlTemplate>
+        		</Setter.Value>
+        	</Setter>
+        </Style>
 	</Window.Resources>
 
     <Grid x:Name="LayoutRoot" Margin="0" Width="640" Height="480" HorizontalAlignment="Left" VerticalAlignment="Top">
@@ -200,28 +240,10 @@
         <Label HorizontalAlignment="Right" Margin="0,143,-68,0" VerticalAlignment="Top" Width="64.688" Height="26" Content="Mouse Y:"/>
         <Label x:Name="MouseYLabel" HorizontalAlignment="Right" Margin="0,143,-103,311" Content="Label" d:LayoutOverrides="Height"/>
         <TextBlock FontFamily="Calibri" FontSize="64" Text="IMuSe" TextWrapping="Wrap" Margin="151,169.272,317,221.728"/>
-        <Button x:Name="goVoiceViewButton" Margin="0,182.544,169,235" Style="{DynamicResource ButtonStyle1}" Content="Voice" RenderTransformOrigin="0.5,0.5" Click="goVoiceViewButton_Click" HorizontalAlignment="Right" Width="62" d:LayoutOverrides="VerticalAlignment">
-        	<Button.RenderTransform>
-        		<TransformGroup>
-        			<ScaleTransform/>
-        			<SkewTransform/>
-        			<RotateTransform/>
-        			<TranslateTransform/>
-        		</TransformGroup>
-        	</Button.RenderTransform>
-        </Button>
-        <Button x:Name="goDrawViewButton" Margin="0,182.544,244,235" Style="{DynamicResource ButtonStyle1}" Content="Draw" RenderTransformOrigin="0.5,0.5" Click="goDrawViewButton_Click" HorizontalAlignment="Right" Width="62" d:LayoutOverrides="VerticalAlignment">
-        	<Button.RenderTransform>
-        		<TransformGroup>
-        			<ScaleTransform/>
-        			<SkewTransform/>
-        			<RotateTransform/>
-        			<TranslateTransform/>
-        		</TransformGroup>
-        	</Button.RenderTransform>
-        </Button>       
+        <Button x:Name="goDrawViewButton" Content="Button" Margin="0,161.463,214,221.728" Style="{DynamicResource IMuSe_button_style01}" HorizontalAlignment="Right" Width="99" Click="goDrawViewButton_Click" />
+        <Button x:Name="goVoiceViewButton" Content="Button" Margin="0,161.463,93,221.728" Style="{DynamicResource IMuse_button_style02}" HorizontalAlignment="Right" Width="99" Click="goVoiceViewButton_Click" />       
         <!--Start Container of Rectangle(Previous View)!-->
-        <Border x:Name="bordervisual" Width="640" Margin="0,0,0,0" Height="480">
+        <Border x:Name="bordervisual" Width="640" Margin="0,0,0,0" Height="480" d:IsLocked="True">
             <Border.RenderTransform>
                 <TranslateTransform/>
             </Border.RenderTransform>
@@ -229,7 +251,7 @@
         </Border>
         <!--End Container of Rectangle(Previous View)!-->        
         <!--Start Container of current view!-->
-        <ItemsControl x:Name="viewer" DataContext="{Binding Path=SelectedItem, ElementName=viewList}" BorderThickness="1" BorderBrush="Black" Margin="0,0,0,0">
+        <ItemsControl x:Name="viewer" DataContext="{Binding Path=SelectedItem, ElementName=viewList}" BorderThickness="1" BorderBrush="Black" Margin="0,0,0,0" d:IsLocked="True">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Frame x:Name="frame" Source="{Binding XPath=@Source}"/>
@@ -240,19 +262,19 @@
             </ItemsControl.RenderTransform>
         </ItemsControl>
         <!--End Container of current view!-->
-        <Ellipse Margin="-35.5,0,-35.5,-21" VerticalAlignment="Bottom" Height="44" Stroke="#FF848484" StrokeThickness="0">
-            <Ellipse.Fill>
+        <Rectangle Margin="-35.5,0,-35.5,-15" VerticalAlignment="Bottom" Height="44" Stroke="#FF848484" StrokeThickness="0">
+            <Rectangle.Fill>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#FFDEDEDE" Offset="0"/>
                     <GradientStop Color="#FF4F4F4F" Offset="1"/>
                 </LinearGradientBrush>
-            </Ellipse.Fill>
-            <Ellipse.Effect>
-                <DropShadowEffect ShadowDepth="2" Direction="90" BlurRadius="7" />
-            </Ellipse.Effect>           
-        </Ellipse>
-        <Image x:Name="hand_palm" Margin="159.688,32,0,0" Width="64" Height="64" Source="icons/Hands-Whole-hand-icon.png" Stretch="Fill" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-        <Image x:Name="hand_grip" Margin="75,42.232,0,0" Height="64" Source="icons/Fist_hand_paw_handwriting(4).png" RenderTransformOrigin="0.5,0.5" VerticalAlignment="Top" Stretch="Fill" Width="64" HorizontalAlignment="Left"/>
+            </Rectangle.Fill>
+            <Rectangle.Effect>
+                <DropShadowEffect ShadowDepth="2" Direction="90" BlurRadius="6" Opacity="0.56" />
+            </Rectangle.Effect>           
+        </Rectangle>
+        <Image x:Name="hand_palm" Margin="0,0,279,9" Width="20" Height="20" Source="icons/Hands-Whole-hand-icon.png" Stretch="Fill" VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
+        <Image x:Name="hand_grip" Margin="0,0,278,8" Height="20" Source="/v0.1;component/icons/hand_grip_icon.png" RenderTransformOrigin="0.5,0.5" VerticalAlignment="Bottom" Stretch="Fill" Width="20" HorizontalAlignment="Right"/>
         <Button Content="Previous Page" HorizontalAlignment="Right" Height="27" Margin="0,0,-102,132" VerticalAlignment="Bottom" Width="94" Name="previousViewButton" Click="previousViewButton_Click" />
         <Label Content="Label" HorizontalAlignment="Right" Margin="0,350,-102,90" Name="testLabel" Width="94.093" />
         <Label Content="Label" HorizontalAlignment="Right" Margin="0,390,-47,64" Name="currentPageLabel" />
@@ -260,5 +282,6 @@
         <Label Content="Debouncing:" HorizontalAlignment="Right" Margin="0,406,-88.334,48" x:Name="debouncingLabel_Copy" />
         <TextBox x:Name="eventBox" HorizontalAlignment="Right" Margin="0,169.272,-102,163" TextWrapping="Wrap" Width="94.594" VerticalScrollBarVisibility="Visible"/>
         <Label x:Name="VoiceCommandLabel" Content="Voice Command" HorizontalAlignment="Right" Margin="0,78,-106,0" VerticalAlignment="Top"/>
+        <TextBlock FontFamily="Calibri" FontSize="16" Text="IMuSe" TextWrapping="Wrap" Margin="298,0,298,10" Height="19" VerticalAlignment="Bottom"/>
     </Grid>
 </Window>

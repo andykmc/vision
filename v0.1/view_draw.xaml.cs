@@ -68,7 +68,7 @@ namespace v0_1
             //MessageBox.Show("Matched result:" + MatchingHelper.matchedClass);
             backgroundWorkerMatch.Abort();
             backgroundWorkerMatch.Dispose();
-            viewControlHelper.gotoView(views.view_result);
+            viewControlHelper.gotoView(views.view_result);            
         }
 
         private void testButton_Click(object sender, RoutedEventArgs e)
@@ -120,7 +120,6 @@ namespace v0_1
         private void InkCanvas_ActiveEditingModeChanged(object sender, RoutedEventArgs e)
         {   
             textBox.Text += "InkCanvas_ActiveEditingModeChanged\n";
-            //MessageBox.Show("InkCanvas_ActiveEditingModeChanged");
         }
 
         private void InkCanvas_ContextMenuClosing(object sender, ContextMenuEventArgs e)
@@ -196,8 +195,7 @@ namespace v0_1
 
         private void InkCanvas_LayoutUpdated(object sender, EventArgs e)
         {
-            //Label label = (Label)parentWindow.FindName("eventLabel");
-            //label.Content = "InkCanvas_LayoutUpdated";
+            //textBox.Text += "InkCanvas_LayoutUpdated\n"; ;
             //MessageBox.Show("InkCanvas_LayoutUpdated");
         }
 
@@ -233,7 +231,8 @@ namespace v0_1
 
         private void InkCanvas_MouseMove(object sender, MouseEventArgs e)
         {
-            textBox.Text += "InkCanvas_MouseMove\n";
+            //strokeNumLabel.Content = InkCanvas.Strokes.Count.ToString();
+            //textBox.Text += "InkCanvas_MouseMove\n";
         }
 
         private void InkCanvas_MouseUp(object sender, MouseButtonEventArgs e)
@@ -329,6 +328,414 @@ namespace v0_1
         private void InkCanvas_TargetUpdated(object sender, DataTransferEventArgs e)
         {
             textBox.Text += "InkCanvas_TargetUpdated\n";
+        }
+        //===================
+
+        private void InkCanvas_EditingModeInvertedChanged(object sender, RoutedEventArgs e)
+        {
+            textBox.Text += "InkCanvas_EditingModeInvertedChanged\n";
+        }
+
+        private void InkCanvas_FocusableChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            textBox.Text += "InkCanvas_FocusableChanged\n";
+        }
+
+        private void InkCanvas_GiveFeedback(object sender, GiveFeedbackEventArgs e)
+        {
+            textBox.Text += "InkCanvas_GiveFeedback\n";
+        }
+
+        private void InkCanvas_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            textBox.Text += "InkCanvas_GotKeyboardFocus\n";
+        }
+
+        private void InkCanvas_GotStylusCapture(object sender, StylusEventArgs e)
+        {
+            textBox.Text += "InkCanvas_GotStylusCapture\n";
+        }
+
+        private void InkCanvas_GotTouchCapture(object sender, TouchEventArgs e)
+        {
+            textBox.Text += "InkCanvas_GotTouchCapture\n";
+        }
+
+        private void InkCanvas_Initialized(object sender, EventArgs e)
+        {
+            //textBox.Text += "InkCanvas_Initialized\n";
+            //MessageBox.Show("InkCanvas_Initialized");
+        }
+
+        private void InkCanvas_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            textBox.Text += "InkCanvas_IsEnabledChanged\n";
+        }
+
+        private void InkCanvas_IsHitTestVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            textBox.Text += "InkCanvas_IsHitTestVisibleChanged\n";
+        }
+
+        private void InkCanvas_IsKeyboardFocusedChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            textBox.Text += "InkCanvas_IsKeyboardFocusedChanged\n";
+        }
+
+        private void InkCanvas_IsKeyboardFocusWithinChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            textBox.Text += "InkCanvas_IsKeyboardFocusWithinChanged\n";
+        }
+
+        private void InkCanvas_IsStylusCapturedChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            textBox.Text += "InkCanvas_IsStylusCapturedChanged\n";
+        }
+
+        private void InkCanvas_IsStylusCaptureWithinChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            textBox.Text += "InkCanvas_IsStylusCaptureWithinChanged\n";
+        }
+
+        private void InkCanvas_IsStylusDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            textBox.Text += "InkCanvas_IsStylusDirectlyOverChanged\n";
+        }
+
+        private void InkCanvas_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            //textBox.Text += "InkCanvas_IsVisibleChanged\n";
+            //MessageBox.Show("InkCanvas_IsVisibleChanged");
+        }
+
+        private void InkCanvas_KeyDown(object sender, KeyEventArgs e)
+        {
+            textBox.Text += "InkCanvas_KeyDown\n";
+        }
+
+        private void InkCanvas_KeyUp(object sender, KeyEventArgs e)
+        {
+            textBox.Text += "InkCanvas_KeyUp\n";
+        }
+
+        private void InkCanvas_Loaded(object sender, RoutedEventArgs e)
+        {
+            textBox.Text += "InkCanvas_Loaded\n";
+        }
+
+        private void InkCanvas_LostFocus(object sender, RoutedEventArgs e)
+        {
+            textBox.Text += "InkCanvas_LostFocus\n";
+        }
+
+        private void InkCanvas_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            textBox.Text += "InkCanvas_LostKeyboardFocus\n";
+        }
+
+        private void InkCanvas_LostMouseCapture(object sender, MouseEventArgs e)
+        {
+            textBox.Text += "InkCanvas_LostMouseCapture\n";
+        }
+
+        private void InkCanvas_LostStylusCapture(object sender, StylusEventArgs e)
+        {
+            textBox.Text += "InkCanvas_LostStylusCapture\n";
+        }
+
+        private void InkCanvas_LostTouchCapture(object sender, TouchEventArgs e)
+        {
+            textBox.Text += "InkCanvas_LostTouchCapture\n";
+        }
+
+        private void InkCanvas_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            textBox.Text += "InkCanvas_MouseWheel\n";
+        }
+
+        private void InkCanvas_PreviewDragEnter(object sender, DragEventArgs e)
+        {
+            textBox.Text += "InkCanvas_PreviewDragEnter\n";
+        }
+
+        private void InkCanvas_PreviewDragLeave(object sender, DragEventArgs e)
+        {
+            textBox.Text += "InkCanvas_PreviewDragLeave\n";
+        }
+
+        private void InkCanvas_PreviewDragOver(object sender, DragEventArgs e)
+        {
+            textBox.Text += "InkCanvas_PreviewDragOver\n";
+        }
+
+        private void InkCanvas_PreviewDrop(object sender, DragEventArgs e)
+        {
+            textBox.Text += "InkCanvas_PreviewDrop\n";
+        }
+
+        private void InkCanvas_PreviewGiveFeedback(object sender, GiveFeedbackEventArgs e)
+        {
+            textBox.Text += "InkCanvas_PreviewGiveFeedback\n";
+        }
+
+        private void InkCanvas_PreviewGotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            textBox.Text += "InkCanvas_PreviewGotKeyboardFocus\n";
+        }
+
+        private void InkCanvas_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            textBox.Text += "InkCanvas_PreviewKeyDown\n";
+        }
+
+        private void InkCanvas_PreviewKeyUp(object sender, KeyEventArgs e)
+        {
+            textBox.Text += "InkCanvas_PreviewKeyUp\n";
+        }
+
+        private void InkCanvas_PreviewLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            textBox.Text += "InkCanvas_PreviewLostKeyboardFocus\n";
+        }
+
+        private void InkCanvas_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            textBox.Text += "InkCanvas_PreviewMouseDown\n";
+        }
+
+        private void InkCanvas_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            textBox.Text += "InkCanvas_PreviewMouseLeftButtonDown\n";
+        }
+
+        private void InkCanvas_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            textBox.Text += "InkCanvas_PreviewMouseLeftButtonUp\n";
+        }
+
+        private void InkCanvas_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            textBox.Text += "InkCanvas_PreviewMouseMove\n";
+        }
+
+        private void InkCanvas_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            textBox.Text += "InkCanvas_PreviewMouseRightButtonDown\n";
+        }
+
+        private void InkCanvas_PreviewMouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            textBox.Text += "InkCanvas_PreviewMouseRightButtonUp\n";
+        }
+
+        private void InkCanvas_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            textBox.Text += "InkCanvas_PreviewMouseUp\n";
+        }
+
+        private void InkCanvas_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            textBox.Text += "InkCanvas_PreviewMouseWheel\n";
+        }
+
+        private void InkCanvas_PreviewQueryContinueDrag(object sender, QueryContinueDragEventArgs e)
+        {
+            textBox.Text += "InkCanvas_PreviewQueryContinueDrag\n";
+        }
+
+        private void InkCanvas_PreviewStylusButtonDown(object sender, StylusButtonEventArgs e)
+        {
+            textBox.Text += "InkCanvas_PreviewStylusButtonDown\n";
+        }
+
+        private void InkCanvas_PreviewStylusButtonUp(object sender, StylusButtonEventArgs e)
+        {
+            textBox.Text += "InkCanvas_PreviewStylusButtonUp\n";
+        }
+
+        private void InkCanvas_PreviewStylusDown(object sender, StylusDownEventArgs e)
+        {
+            textBox.Text += "InkCanvas_PreviewStylusDown\n";
+        }
+
+        private void InkCanvas_PreviewStylusInAirMove(object sender, StylusEventArgs e)
+        {
+            textBox.Text += "InkCanvas_PreviewStylusInAirMove\n";
+        }
+
+        private void InkCanvas_PreviewStylusInRange(object sender, StylusEventArgs e)
+        {
+            textBox.Text += "InkCanvas_PreviewStylusInRange\n";
+        }
+
+        private void InkCanvas_PreviewStylusMove(object sender, StylusEventArgs e)
+        {
+            textBox.Text += "InkCanvas_PreviewStylusMove\n";
+        }
+
+        private void InkCanvas_PreviewStylusOutOfRange(object sender, StylusEventArgs e)
+        {
+            textBox.Text += "InkCanvas_PreviewStylusOutOfRange\n";
+        }
+
+        private void InkCanvas_PreviewStylusSystemGesture(object sender, StylusSystemGestureEventArgs e)
+        {
+            textBox.Text += "InkCanvas_PreviewStylusSystemGesture\n";
+        }
+
+        private void InkCanvas_PreviewStylusUp(object sender, StylusEventArgs e)
+        {
+            textBox.Text += "InkCanvas_PreviewStylusUp\n";
+        }
+
+        private void InkCanvas_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            textBox.Text += "InkCanvas_PreviewTextInput\n";
+        }
+
+        private void InkCanvas_PreviewTouchDown(object sender, TouchEventArgs e)
+        {
+            textBox.Text += "InkCanvas_PreviewTouchDown\n";
+        }
+
+        private void InkCanvas_PreviewTouchMove(object sender, TouchEventArgs e)
+        {
+            textBox.Text += "InkCanvas_PreviewTouchMove\n";
+        }
+
+        private void InkCanvas_PreviewTouchUp(object sender, TouchEventArgs e)
+        {
+            textBox.Text += "InkCanvas_PreviewTouchUp\n";
+        }
+
+        private void InkCanvas_RequestBringIntoView(object sender, RequestBringIntoViewEventArgs e)
+        {
+            textBox.Text += "InkCanvas_RequestBringIntoView\n";
+        }
+
+        private void InkCanvas_SelectionResized(object sender, EventArgs e)
+        {
+            textBox.Text += "InkCanvas_SelectionResized\n";
+        }
+
+        private void InkCanvas_SelectionResizing(object sender, InkCanvasSelectionEditingEventArgs e)
+        {
+            textBox.Text += "InkCanvas_SelectionResizing\n";
+        }
+
+        private void InkCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            //textBox.Text += "InkCanvas_SizeChanged\n";
+        }
+
+        private void InkCanvas_StrokeErased(object sender, RoutedEventArgs e)
+        {
+            textBox.Text += "InkCanvas_StrokeErased\n";
+        }
+
+        private void InkCanvas_StrokeErasing(object sender, InkCanvasStrokeErasingEventArgs e)
+        {
+            textBox.Text += "InkCanvas_StrokeErasing\n";
+        }
+
+        private void InkCanvas_StylusButtonDown(object sender, StylusButtonEventArgs e)
+        {
+            textBox.Text += "InkCanvas_StylusButtonDown\n";
+        }
+
+        private void InkCanvas_StylusButtonUp(object sender, StylusButtonEventArgs e)
+        {
+            textBox.Text += "InkCanvas_StylusButtonUp\n";
+        }
+
+        private void InkCanvas_StylusDown(object sender, StylusDownEventArgs e)
+        {
+            textBox.Text += "InkCanvas_StylusDown\n";
+        }
+
+        private void InkCanvas_StylusEnter(object sender, StylusEventArgs e)
+        {
+            textBox.Text += "InkCanvas_StylusEnter\n";
+        }
+
+        private void InkCanvas_StylusInAirMove(object sender, StylusEventArgs e)
+        {
+            textBox.Text += "InkCanvas_StylusInAirMove\n";
+        }
+
+        private void InkCanvas_StylusInRange(object sender, StylusEventArgs e)
+        {
+            textBox.Text += "InkCanvas_StylusInRange\n";
+        }
+
+        private void InkCanvas_StylusLeave(object sender, StylusEventArgs e)
+        {
+            textBox.Text += "InkCanvas_StylusLeave\n";
+        }
+
+        private void InkCanvas_StylusMove(object sender, StylusEventArgs e)
+        {
+            textBox.Text += "InkCanvas_StylusMove\n";
+        }
+
+        private void InkCanvas_StylusOutOfRange(object sender, StylusEventArgs e)
+        {
+            textBox.Text += "InkCanvas_StylusOutOfRange\n";
+        }
+
+        private void InkCanvas_StylusSystemGesture(object sender, StylusSystemGestureEventArgs e)
+        {
+            textBox.Text += "InkCanvas_StylusSystemGesture\n";
+        }
+
+        private void InkCanvas_StylusUp(object sender, StylusEventArgs e)
+        {
+            textBox.Text += "InkCanvas_StylusUp\n";
+        }
+
+        private void InkCanvas_TextInput(object sender, TextCompositionEventArgs e)
+        {
+            textBox.Text += "InkCanvas_TextInput\n";
+        }
+
+        private void InkCanvas_ToolTipClosing(object sender, ToolTipEventArgs e)
+        {
+            textBox.Text += "InkCanvas_ToolTipClosing\n";
+        }
+
+        private void InkCanvas_ToolTipOpening(object sender, ToolTipEventArgs e)
+        {
+            textBox.Text += "InkCanvas_ToolTipOpening\n";
+        }
+
+        private void InkCanvas_TouchDown(object sender, TouchEventArgs e)
+        {
+            textBox.Text += "InkCanvas_TouchDown\n";
+        }
+
+        private void InkCanvas_TouchEnter(object sender, TouchEventArgs e)
+        {
+            textBox.Text += "InkCanvas_TouchEnter\n";
+        }
+
+        private void InkCanvas_TouchLeave(object sender, TouchEventArgs e)
+        {
+            textBox.Text += "InkCanvas_TouchLeave\n";
+        }
+
+        private void InkCanvas_TouchMove(object sender, TouchEventArgs e)
+        {
+            textBox.Text += "InkCanvas_TouchMove\n";
+        }
+
+        private void InkCanvas_TouchUp(object sender, TouchEventArgs e)
+        {
+            textBox.Text += "InkCanvas_TouchUp\n";
+        }
+
+        private void InkCanvas_Unloaded(object sender, RoutedEventArgs e)
+        {
+            textBox.Text += "InkCanvas_Unloaded\n";
         }        
 	}    
 }

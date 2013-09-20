@@ -12,7 +12,5 @@
 		<Image Margin="238,0,264,-38" Source="icons/mic_w.png" Stretch="Fill" VerticalAlignment="Bottom" Height="138" ClipToBounds="True"/>
 		<Image Margin="238,-40,264,0" ClipToBounds="True" Source="icons\mic_w.png" Stretch="Fill" VerticalAlignment="Top" Height="138"/>
 		<Image Margin="238,162,264,180" ClipToBounds="True" Source="icons\mic_w.png" Stretch="Fill"/>
-		<TextBox Margin="215,143,240,0" VerticalAlignment="Top" Height="31" Text="TextBox" TextWrapping="Wrap"/>
-		<Label HorizontalAlignment="Left" Margin="228,107,0,0" VerticalAlignment="Top" Content="input box"/>
 	</Grid>
 </Page>

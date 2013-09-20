@@ -51,8 +51,9 @@ namespace v0_1
             animatedViewer = new AnimatedViewer(this);
             //for changing pages
             viewControlHelper = ViewControlHelper.Instance;
-            VoiceControlHelper.Initialize(viewControlHelper);//initailize voice control
+            VoiceControlHelper.Initialize();//initailize voice control
             //for gesture control
+            GestureControlHelper.Initialize();//initailize gesture control
             backgroundWorker1 = new BackgroundWorker();
             backgroundWorker1.WorkerReportsProgress = true;
             backgroundWorker1.WorkerSupportsCancellation = true;
@@ -211,6 +212,12 @@ namespace v0_1
                 return;
             }
 
+            //GestureControlHelper.geoNodeParams = (MyGestureParams)e.UserState;
+            //GestureControlHelper.hoveredButton = hoveredButton;
+            //GestureControlHelper.hoveredInkCanvas = hoveredInkCanvas;
+            //GestureControlHelper.RunGestureControl();
+
+            
             MyGestureParams geoNodeParams = new MyGestureParams();
             geoNodeParams = (MyGestureParams)e.UserState;
             MyGesturePath myPath = null;
@@ -270,19 +277,19 @@ namespace v0_1
                     {
                         myPath = new MyGesturePath(oldPoint, newPoint);
                         
-                        /*if ((newPoint.X > 160) && (newPoint.X < 480) &&
-                            (newPoint.Y > 110) && (newPoint.Y < 430))
-                        {
-                            myPath = new MyGesturePath(oldPoint, newPoint);
+                      //if ((newPoint.X > 160) && (newPoint.X < 480) &&
+                      //      (newPoint.Y > 110) && (newPoint.Y < 430))
+                      //  {
+                      //      myPath = new MyGesturePath(oldPoint, newPoint);
 
-                            if ((oldPoint.X != newPoint.X) || (oldPoint.Y != newPoint.Y))
-                            {
-                                //this.myPathList.Add(myPath);                                
-                            }
-                            //panel1.Invalidate();
-                            //drawingCanvas.Invalidate();
-                            // signalLight.Invalidate();
-                        }*/
+                      //      if ((oldPoint.X != newPoint.X) || (oldPoint.Y != newPoint.Y))
+                      //      {
+                      //          //this.myPathList.Add(myPath);                                
+                      //      }
+                      //      //panel1.Invalidate();
+                      //      //drawingCanvas.Invalidate();
+                      //      // signalLight.Invalidate();
+                      //  }
                     }
                     // Perform actions on the hit test results list.
                     //Raise the Button mouse click event
@@ -304,27 +311,26 @@ namespace v0_1
                         //======End of method 1========
                         
                         //======Start of method 2========
-                        /*
-                         * Problem: can show the stroke correctly, but very high latency
-                         * Findings: probably because this method simply add child to Inkcanvas, processing power and memory consuming
-                        Line linetodraw = new Line();
-                        linetodraw.X1 = myPath.OldPoint.X;//0
-                        linetodraw.Y1 = myPath.OldPoint.Y;//0
-                        linetodraw.X2 = myPath.NewPoint.X;//10
-                        linetodraw.Y2 = myPath.NewPoint.Y;//10
-                        linetodraw.StrokeThickness = 2;
-                        linetodraw.Stroke = new SolidColorBrush(Colors.Black);
-                        this.hoveredInkCanvas.Children.Add(linetodraw);
-                        */
+                        
+                        //  Problem: can show the stroke correctly, but very high latency
+                        //  Findings: probably because this method simply add child to Inkcanvas, processing power and memory consuming
+                        //Line linetodraw = new Line();
+                        //linetodraw.X1 = myPath.OldPoint.X;//0
+                        //linetodraw.Y1 = myPath.OldPoint.Y;//0
+                        //linetodraw.X2 = myPath.NewPoint.X;//10
+                        //linetodraw.Y2 = myPath.NewPoint.Y;//10
+                        //linetodraw.StrokeThickness = 2;
+                        //linetodraw.Stroke = new SolidColorBrush(Colors.Black);
+                        //this.hoveredInkCanvas.Children.Add(linetodraw);
                         //=======End of method 2=========
 
                         //======Method 3 under investigation=====
-                        /*
-                         * Target: 
-                        StrokeCollection strokeCollection = new StrokeCollection();
-                        Stroke stroke = new Stroke();
-                        strokeCollection.
-                        */
+                        
+                        //  Target: 
+                        //StrokeCollection strokeCollection = new StrokeCollection();
+                        //Stroke stroke = new Stroke();
+                        //strokeCollection.
+                        
                         //======Method 3 under investigation=====
                     }
                 }
@@ -355,12 +361,12 @@ namespace v0_1
             this.debouncingLabel.Content = needDebouncing.ToString();
 
             //capture the events
-            var events = EventManager.GetRoutedEvents();
-            foreach (var routedEvent in events)
-            {
-                EventManager.RegisterClassHandler(typeof(UserControl), routedEvent, new RoutedEventHandler(handler));
-            }
-            eventBox.ScrollToEnd();
+            //var events = EventManager.GetRoutedEvents();
+            //foreach (var routedEvent in events)
+            //{
+            //    EventManager.RegisterClassHandler(typeof(UserControl), routedEvent, new RoutedEventHandler(handler));
+            //}
+            //eventBox.ScrollToEnd();
         }
 
         private void backgroundWorker2_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -377,6 +383,7 @@ namespace v0_1
         { //MessageBox.Show("stopped backgroundWorker2, is cancelled?" + e.Cancelled.ToString()); 
         }
 
+        
         //For controlling the InkCanvas
         private void raiseInkCanvasMouseEvent(string eventName)
         {
@@ -388,7 +395,7 @@ namespace v0_1
                     if (hoveredInkCanvas != null && inkCanvasMouseDown == true)
                     {
                         //======Start of method 1========
-                        hoveredInkCanvas.RaiseEvent(new MouseButtonEventArgs(Mouse.PrimaryDevice, Environment.TickCount, MouseButton.Left) { RoutedEvent = InkCanvas.MouseUpEvent });
+                        hoveredInkCanvas.RaiseEvent(new MouseButtonEventArgs(Mouse.PrimaryDevice, Environment.TickCount, MouseButton.Left) { RoutedEvent = InkCanvas.PreviewMouseUpEvent });
                         inkCanvasMouseDown = false;
                         hoveredInkCanvas.ReleaseMouseCapture();
                         //=======End of method 1=========
@@ -396,32 +403,41 @@ namespace v0_1
                     break;
                 case "MouseDownEvent":
                     //======Start of method 1========(to be used with Raising InkcCanvas mouse down event)
-                    /* Problem: can not correct show the drawn immediately, of shown after finishing one stroke
-                     * Findings: 1. this method is done by simulating mouse down event
-                     *           2. may be missing the event for adding stroke to stroke property of InkCanvas
-                     */
+                    // Problem: can not correct show the drawn immediately, of shown after finishing one stroke
+                    // Findings: 1. this method is done by simulating mouse down event
+                    //           2. may be missing the event for adding stroke to stroke property of InkCanvas
+                     
                     inkCanvasMouseDown = true;
+                    hoveredInkCanvas.RaiseEvent(new MouseButtonEventArgs(Mouse.PrimaryDevice, Environment.TickCount, MouseButton.Left) { RoutedEvent = InkCanvas.PreviewMouseLeftButtonDownEvent });
+                    hoveredInkCanvas.RaiseEvent(new MouseButtonEventArgs(Mouse.PrimaryDevice, Environment.TickCount, MouseButton.Left) { RoutedEvent = InkCanvas.PreviewMouseDownEvent });
                     hoveredInkCanvas.Focus();
                     hoveredInkCanvas.CaptureMouse();
                     hoveredInkCanvas.RaiseEvent(new MouseButtonEventArgs(Mouse.PrimaryDevice, Environment.TickCount, MouseButton.Left) { RoutedEvent = InkCanvas.MouseDownEvent });
+                    //hoveredInkCanvas.RaiseEvent(new InkCanvasStrokeCollectedEventArgs(new Stroke(new StylusPointCollection(new StylusPointDescription()))));
                     //=======End of method 1=========
                     break;
             }
 
         }
 
+        string routedEventName = "";
         //capture the events
-        internal static void handler(object sender, RoutedEventArgs e)
-        {            
-            MessageBox.Show(e.RoutedEvent.ToString());
+        //internal static void handler(object sender, RoutedEventArgs e)
+        void handler(object sender, RoutedEventArgs e)
+        {
+            if (routedEventName != "CanExecute" && routedEventName != "PreviewCanExecute")
+            {
+                routedEventName = e.RoutedEvent.Name.ToString();
+                MessageBox.Show(routedEventName);
+            }
         }
         
         //Render the captured view into the Rectangle
         private void viewList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            //viewControlHelper.viewsHistory.Add((views)viewList.SelectedIndex);
+        {   
             animatedViewer.RenderCapturedView();
         }
+        
         //For controlling the cursor
         public partial class NativeMethods
         {

@@ -5,5 +5,85 @@
 	StartupUri="MainWindow.xaml">
 	<Application.Resources>
 		<!-- Resources scoped at the Application level should be defined here. -->
+		<Style x:Key="IMuSe_button_style01" TargetType="{x:Type Button}">
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type Button}">
+						<Grid>
+							<Ellipse StrokeThickness="5" Stroke="#FFA671E9">
+								<Ellipse.Fill>
+									<RadialGradientBrush GradientOrigin="-0.5,-0.5" Center="0.5,0.5" RadiusX="0.8" RadiusY="0.8">
+										<GradientStop Color="#FFA26FD8"/>
+										<GradientStop Color="#FF2C005A" Offset="1"/>
+									</RadialGradientBrush>
+								</Ellipse.Fill>
+							</Ellipse>
+							<Rectangle Margin="21.478,19.96,21.938,21" StrokeThickness="5" RenderTransformOrigin="0.5,0.5">
+								<Rectangle.RenderTransform>
+									<TransformGroup>
+										<ScaleTransform/>
+										<SkewTransform/>
+										<RotateTransform/>
+										<TranslateTransform/>
+									</TransformGroup>
+								</Rectangle.RenderTransform>
+								<Rectangle.Fill>
+									<ImageBrush ImageSource="draw_icon2.png"/>
+								</Rectangle.Fill>
+							</Rectangle>
+		
+							<ContentPresenter HorizontalAlignment="Left" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="Top" Margin="8,8,0,0" Visibility="Hidden"/>
+						</Grid>
+						<ControlTemplate.Triggers>
+							<Trigger Property="IsFocused" Value="True"/>
+							<Trigger Property="IsDefaulted" Value="True"/>
+							<Trigger Property="IsMouseOver" Value="True"/>
+							<Trigger Property="IsPressed" Value="True"/>
+							<Trigger Property="IsEnabled" Value="False"/>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+		<Style x:Key="IMuse_button_style02" TargetType="{x:Type Button}">
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type Button}">
+						<Grid>
+							<Ellipse StrokeThickness="5" Stroke="#FFE99D71">
+								<Ellipse.Fill>
+									<RadialGradientBrush GradientOrigin="-0.5,-0.5" Center="0.5,0.5" RadiusX="0.8" RadiusY="0.8">
+										<GradientStop Color="#FFD8B76F"/>
+										<GradientStop Color="#FF5A1900" Offset="1"/>
+									</RadialGradientBrush>
+								</Ellipse.Fill>
+							</Ellipse>
+							<Rectangle Margin="21.478,19.96,21.938,21" StrokeThickness="5" RenderTransformOrigin="0.5,0.5">
+								<Rectangle.RenderTransform>
+									<TransformGroup>
+										<ScaleTransform/>
+										<SkewTransform/>
+										<RotateTransform/>
+										<TranslateTransform/>
+									</TransformGroup>
+								</Rectangle.RenderTransform>
+								<Rectangle.Fill>
+									<ImageBrush ImageSource="icons/mic_w.png"/>
+								</Rectangle.Fill>
+							</Rectangle>
+		
+							<ContentPresenter HorizontalAlignment="Left" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="Top" Margin="8,8,0,0" Visibility="Hidden"/>
+						</Grid>
+						<ControlTemplate.Triggers>
+							<Trigger Property="IsFocused" Value="True"/>
+							<Trigger Property="IsDefaulted" Value="True"/>
+							<Trigger Property="IsMouseOver" Value="True"/>
+							<Trigger Property="IsPressed" Value="True"/>
+							<Trigger Property="IsEnabled" Value="False"/>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
 	</Application.Resources>
 </Application>

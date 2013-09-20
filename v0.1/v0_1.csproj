@@ -104,6 +104,7 @@
     </Compile>
     <Compile Include="BingSearchContainer.cs" />
     <Compile Include="EasyTimer.cs" />
+    <Compile Include="GestureControlHelper.cs" />
     <Compile Include="InkCanvasUtil.cs" />
     <Compile Include="MatchingHelper.cs" />
     <Compile Include="MyGesturePath.cs" />
@@ -164,6 +165,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="draw_icon2.png" />
     <Resource Include="icons\Fist_hand_paw_handwriting%284%29.png" />
     <Resource Include="icons\Hands-Whole-hand-icon.png" />
     <Resource Include="icons\mic_w.png" />
@@ -192,6 +194,9 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\hand_grip_icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

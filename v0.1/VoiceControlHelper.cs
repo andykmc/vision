@@ -28,9 +28,9 @@ namespace v0_1
          
             "I MuSe", "search", "go to home", "back to home", "done"};*/
 
-        public static void Initialize(ViewControlHelper v)
+        public static void Initialize()
         {
-            viewControlHelper = v;
+            viewControlHelper = ViewControlHelper.Instance;
             detectedVoiceParams = new MyVoiceParams();
             keywordDetected = false;
             voiceControlEnabled = false;
