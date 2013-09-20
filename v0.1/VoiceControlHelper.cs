@@ -10,6 +10,12 @@ namespace v0_1
 {
     static class VoiceControlHelper
     {
+        public static string[] voiceCommands = new string[] {"donut", "T-shirt", "tennis racket", "apple", "eyeglasses", "hourglass", "Moon", "revolver", 
+                "sun", "hamburger", "ladder", "pumpkin", "rainbow", "skull", "snowman", "blimp", "candle", "comb", "computer monitor", "fire hydrant", 
+                "select", "selecting", "selecting mode", "rank", "ranking", "ranking mode", "swap forward", "swap back", "reset", "restart", 
+                "I MuSe", "search", "go to home", "back to home", "done"};
+        
+
         static ViewControlHelper viewControlHelper;
         public static MyVoiceParams detectedVoiceParams;
         static string commandSentence;
@@ -20,13 +26,6 @@ namespace v0_1
         const int defaultMinConfidenceLevel = 40;
         static Label parentWindowVoiceLabel;
 
-
-        /* {"select", "selecting", "selecting mode", "rank", "ranking", "ranking mode", "swap forward", 
-            "swap back", "reset", "restart", "cat", "kitty", "aeroplane", "plane", "dog", "puppy", "donut", "Eiffel Tower", "tower", 
-            "Tom Mason", "Taylor Swift", "T-shirt", "tennis racket", "apple", "eyeglasses", "hourglass", "Moon", "sun", "revolver", 
-            "gun", "hamburger", "pumpkin", "ladder", "skull", "car", 
-         
-            "I MuSe", "search", "go to home", "back to home", "done"};*/
 
         public static void Initialize()
         {
@@ -86,7 +85,8 @@ namespace v0_1
                         viewControlHelper.gotoView(views.view_result);
                         //commandSentence += detectedVoiceParams.detectedPhrase;
                     }
-                    EndOfaVoiceControlCommand();
+                    if (toSearch)
+                        EndOfaVoiceControlCommand();
                     break;
             }
             keywordDetected = true;

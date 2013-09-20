@@ -25,7 +25,7 @@ namespace v0_1
             //set viewControlHelper after page is loaded into main window
             Window parentWindow = Window.GetWindow(this);
             viewControlHelper = ViewControlHelper.Instance;
-            
+            VoiceControlHelper.voiceControlEnabled = true;
         }
 
 

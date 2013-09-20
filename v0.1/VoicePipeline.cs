@@ -6,11 +6,8 @@ using System.Text;
 namespace v0_1
 {
     class VoicePipeline : UtilMPipeline
-    {        
-        string[] wstr = new string[] {"select", "selecting", "selecting mode", "rank", "ranking", "ranking mode", "swap forward", 
-                "swap back", "reset", "restart", "donut", "T-shirt", "tennis racket", "apple", "eyeglasses", "hourglass", "Moon", "revolver", 
-                "gun", "sun", "hamburger", "ladder", "pumpkin", "rainbow", "skull", "snowman", "blimp", "candle", "comb", "computer monitor", 
-                "fire hydrant", "I MuSe", "search", "go to home", "back to home", "done"};
+    {
+        string[] wstr = VoiceControlHelper.voiceCommands;
         protected int nframes;
         protected bool device_lost;
         bool voiceState;

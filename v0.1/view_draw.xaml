@@ -7,7 +7,7 @@
 	WindowTitle="Page"    
 	FlowDirection="LeftToRight"
 	Width="640" Height="480"
-	WindowWidth="640" WindowHeight="480" Background="White" Loaded="Page_Loaded" mc:Ignorable="d">
+	WindowWidth="640" WindowHeight="480" Loaded="Page_Loaded" mc:Ignorable="d">
 	<Page.Resources>
 <!--********************************************
 		*END Resources for page switching animation*
@@ -140,6 +140,9 @@
 			</Setter>
 		</Style>
 	</Page.Resources>
+	<Page.Background>
+		<SolidColorBrush Color="White" Opacity="0.9"/>
+	</Page.Background>
 
 	<Grid x:Name="LayoutRoot">
 		<TextBlock Margin="297,8,302,0" FontFamily="Calibri" FontSize="18.667" Text="Draw" TextWrapping="Wrap" VerticalAlignment="Top" Height="25"/>

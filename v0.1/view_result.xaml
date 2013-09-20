@@ -4,11 +4,14 @@
 	WindowTitle="Page"
 	FlowDirection="LeftToRight"
 	Width="640" Height="480"
-	WindowWidth="640" WindowHeight="480" Background="White" Loaded="ResultPage_Loaded">
+	WindowWidth="640" WindowHeight="480" Loaded="ResultPage_Loaded">
+	<Page.Background>
+		<SolidColorBrush Color="White" Opacity="0.9"/>
+	</Page.Background>
 
 	<Grid x:Name="LayoutRoot">
 		<TextBlock Margin="283,22,299.293,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="18.667" Height="23.66"><Run Language="zh-hk" Text="Result"/></TextBlock>
-		<Ellipse x:Name="Image1" Margin="51,198,0,182" Stroke="Black" HorizontalAlignment="Left" Width="100">
+		<Ellipse x:Name="Image1" Margin="51,198,0,182" Stroke="Black" HorizontalAlignment="Left" Width="100" MouseDown="Image1_MouseDown">
 			<Ellipse.Fill>
 				<RadialGradientBrush GradientOrigin="-0.3,-0.3" RadiusX="1.5" RadiusY="1.5">
 					<GradientStop Color="Black" Offset="1"/>
@@ -16,7 +19,7 @@
 				</RadialGradientBrush>
 			</Ellipse.Fill>
 		</Ellipse>
-		<Ellipse x:Name="Image2" Margin="155,151,0,229" Stroke="Black" HorizontalAlignment="Left" Width="100">
+		<Ellipse x:Name="Image2" Margin="155,151,0,229" Stroke="Black" HorizontalAlignment="Left" Width="100" MouseDown="Image2_MouseDown">
 			<Ellipse.Fill>
 				<RadialGradientBrush GradientOrigin="-0.3,-0.3" RadiusX="1.5" RadiusY="1.5">
 					<GradientStop Color="Black" Offset="1"/>
@@ -24,7 +27,7 @@
 				</RadialGradientBrush>
 			</Ellipse.Fill>
 		</Ellipse>
-		<Ellipse x:Name="Image3" Margin="259,133,281,0" Stroke="Black" Height="100" VerticalAlignment="Top">
+		<Ellipse x:Name="Image3" Margin="259,133,281,0" Stroke="Black" Height="100" VerticalAlignment="Top" MouseDown="Image3_MouseDown">
 			<Ellipse.Fill>
 				<RadialGradientBrush GradientOrigin="-0.3,-0.3" RadiusX="1.5" RadiusY="1.5">
 					<GradientStop Color="Black" Offset="1"/>
@@ -32,7 +35,7 @@
 				</RadialGradientBrush>
 			</Ellipse.Fill>
 		</Ellipse>
-		<Ellipse x:Name="Image4" Margin="0,151,177,229" Stroke="Black" HorizontalAlignment="Right" Width="100">
+		<Ellipse x:Name="Image4" Margin="0,151,177,229" Stroke="Black" HorizontalAlignment="Right" Width="100" MouseDown="Image4_MouseDown">
 			<Ellipse.Fill>
 				<RadialGradientBrush GradientOrigin="-0.3,-0.3" RadiusX="1.5" RadiusY="1.5">
 					<GradientStop Color="Black" Offset="1"/>
@@ -40,7 +43,7 @@
 				</RadialGradientBrush>
 			</Ellipse.Fill>
 		</Ellipse>
-		<Ellipse x:Name="Image5" Margin="0,198,73,182" Stroke="Black" HorizontalAlignment="Right" Width="100">
+		<Ellipse x:Name="Image5" Margin="0,198,73,182" Stroke="Black" HorizontalAlignment="Right" Width="100" MouseDown="Image5_MouseDown">
 			<Ellipse.Fill>
 				<RadialGradientBrush GradientOrigin="-0.3,-0.3" RadiusX="1.5" RadiusY="1.5">
 					<GradientStop Color="Black" Offset="1"/>
@@ -48,7 +51,8 @@
 				</RadialGradientBrush>
 			</Ellipse.Fill>
 		</Ellipse>
-		<TextBlock x:Name="ResultNameTextBox" Margin="268.87,0,281,141.04" TextWrapping="Wrap" VerticalAlignment="Bottom" FontSize="18.667" HorizontalAlignment="Center"/>
+		<TextBlock x:Name="ResultNameTextBox" Margin="309,0,331,182" TextWrapping="Wrap" VerticalAlignment="Bottom" FontSize="18.667" HorizontalAlignment="Center"/>
+		<Button Content="Button" Margin="259,0,281,40" Style="{DynamicResource IMuse_button_style03}" VerticalAlignment="Bottom" Height="100" Width="100" Opacity="0.6" Name="rerankButton" Click="rerankButton_Click" />
 		
 	</Grid>
 </Page>

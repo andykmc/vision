@@ -169,6 +169,7 @@
     <Resource Include="icons\Fist_hand_paw_handwriting%284%29.png" />
     <Resource Include="icons\Hands-Whole-hand-icon.png" />
     <Resource Include="icons\mic_w.png" />
+    <Resource Include="rerank-icon.png" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
