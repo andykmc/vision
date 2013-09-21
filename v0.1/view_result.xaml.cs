@@ -21,12 +21,14 @@ namespace v0_1
         ViewControlHelper viewControlHelper;
         BackgroundWorker backgroundWorkerBing;
         const int numberOfImagesToRetrieve = 5;
+        bool toRerank;
+        bool reranking;
 
 		public view_result()
 		{
 			this.InitializeComponent();
-
-			// Insert code required on object creation below this point.
+            toRerank = false;
+            reranking = false;
 		}
 
         private void ResultPage_Loaded(object sender, RoutedEventArgs e)
@@ -46,19 +48,21 @@ namespace v0_1
         {
             string targetImageClass = MatchingHelper.matchedClass;
 
-            if (MatchingHelper.isReranking && MatchingHelper.rerankingImageName != -1)
+            //check if it is a reranking
+            if (toRerank)
             {
                 double[] rerankedImages = MatchingHelper.SearchSimilar(MatchingHelper.rerankingImageName, numberOfImagesToRetrieve);
                 backgroundWorkerBing.ReportProgress(50, rerankedImages);
                 return;
             }
-            //check if the class of the image is covered by our similarity matching
-            for (int j = 0; j < 20; j++)
+
+            //check if the class of the image is covered by our similarity matching, then retrieve from our own database
+            for (int catNum = 0; catNum < 20; catNum++)
             {
-                string command = VoiceControlHelper.voiceCommands[j];
+                string command = VoiceControlHelper.voiceCommands[catNum];
                 if (targetImageClass == command)
-                {
-                    MatchingHelper.isReranking = false;
+                {                    
+                    toRerank = true;
                     List<double> randomChosedImages = new List<double>();
                     Random randomGen = new Random();
                     for (int k = 0; k < numberOfImagesToRetrieve; k++)
@@ -66,7 +70,7 @@ namespace v0_1
                         double imageNum = 0;
                         do
                         {
-                            imageNum = j * 25 + randomGen.Next(1, 26);
+                            imageNum = catNum * 25 + randomGen.Next(1, 26);
                         } while (randomChosedImages.Contains(imageNum));
                         randomChosedImages.Add(imageNum);
                     }
@@ -75,7 +79,8 @@ namespace v0_1
                 }
             }
 
-            MatchingHelper.isReranking = false;
+            //to retrieve images from the network if the target image class is not covered by our similarity matrix
+            toRerank = false;
             // this is the service root uri for the Bing search service  
             var serviceRootUri = new Uri("https://api.datamarket.azure.com/Data.ashx/Bing/Search/v1");
 
@@ -135,48 +140,50 @@ namespace v0_1
 
         private void rerankButton_Click(object sender, RoutedEventArgs e)
         {
-            if (rerankButton.Opacity != 1)
-            { 
-                rerankButton.Opacity = 1;
-                SolidColorBrush greenBrush = new SolidColorBrush();
-                greenBrush.Color = (Color)ColorConverter.ConvertFromString("#FF96E971");
-                this.Image1.StrokeThickness = 4;
-                this.Image1.Stroke = greenBrush;
-                this.Image2.StrokeThickness = 4;
-                this.Image2.Stroke = greenBrush;
-                this.Image3.StrokeThickness = 4;
-                this.Image3.Stroke = greenBrush;
-                this.Image4.StrokeThickness = 4;
-                this.Image4.Stroke = greenBrush;
-                this.Image5.StrokeThickness = 4;
-                this.Image5.Stroke = greenBrush;
+            if (toRerank)
+            {
+                if (rerankButton.Opacity != 1)
+                {
+                    reranking = true;
+                    rerankButton.Opacity = 1;
+                    SolidColorBrush greenBrush = new SolidColorBrush();
+                    greenBrush.Color = (Color)ColorConverter.ConvertFromString("#FF96E971");
+                    this.Image1.StrokeThickness = 4;
+                    this.Image1.Stroke = greenBrush;
+                    this.Image2.StrokeThickness = 4;
+                    this.Image2.Stroke = greenBrush;
+                    this.Image3.StrokeThickness = 4;
+                    this.Image3.Stroke = greenBrush;
+                    this.Image4.StrokeThickness = 4;
+                    this.Image4.Stroke = greenBrush;
+                    this.Image5.StrokeThickness = 4;
+                    this.Image5.Stroke = greenBrush;
+                }
+                else
+                {
+                    reranking = false;
+                    rerankButton.Opacity = 0.6;
+                    rerankButton.InvalidateVisual();
+                    SolidColorBrush blackBrush = new SolidColorBrush();
+                    blackBrush.Color = Colors.Black;
+                    this.Image1.StrokeThickness = 1;
+                    this.Image1.Stroke = blackBrush;
+                    this.Image2.StrokeThickness = 1;
+                    this.Image2.Stroke = blackBrush;
+                    this.Image3.StrokeThickness = 1;
+                    this.Image3.Stroke = blackBrush;
+                    this.Image4.StrokeThickness = 1;
+                    this.Image4.Stroke = blackBrush;
+                    this.Image5.StrokeThickness = 1;
+                    this.Image5.Stroke = blackBrush;
+                }
             }
-            else
-            { 
-                rerankButton.Opacity = 0.6;
-                rerankButton.InvalidateVisual();
-                SolidColorBrush blackBrush = new SolidColorBrush();
-                blackBrush.Color = Colors.Black;
-                this.Image1.StrokeThickness = 1;
-                this.Image1.Stroke = blackBrush;
-                this.Image2.StrokeThickness = 1;
-                this.Image2.Stroke = blackBrush;
-                this.Image3.StrokeThickness = 1;
-                this.Image3.Stroke = blackBrush;
-                this.Image4.StrokeThickness = 1;
-                this.Image4.Stroke = blackBrush;
-                this.Image5.StrokeThickness = 1;
-                this.Image5.Stroke = blackBrush;
-            }
-
-            
         }
 
         private void Image1_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (Image1.StrokeThickness == 4)
-            {
-                MatchingHelper.isReranking = true;
+            if (reranking)
+            {               
                 MatchingHelper.rerankingImageName = (int)MatchingHelper.resultsForReranking[0];
                 this.ResultPage_Loaded(new object(), new RoutedEventArgs());
             }
@@ -184,9 +191,8 @@ namespace v0_1
 
         private void Image2_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (Image2.StrokeThickness == 4)
-            {
-                MatchingHelper.isReranking = true;
+            if (reranking)
+            {                
                 MatchingHelper.rerankingImageName = (int)MatchingHelper.resultsForReranking[1];
                 this.ResultPage_Loaded(new object(), new RoutedEventArgs());
             }
@@ -194,9 +200,8 @@ namespace v0_1
 
         private void Image3_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (Image3.StrokeThickness == 4)
+            if (reranking)
             {
-                MatchingHelper.isReranking = true;
                 MatchingHelper.rerankingImageName = (int)MatchingHelper.resultsForReranking[2];
                 this.ResultPage_Loaded(new object(), new RoutedEventArgs());
             }
@@ -204,9 +209,8 @@ namespace v0_1
 
         private void Image4_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (Image4.StrokeThickness == 4)
+            if (reranking)
             {
-                MatchingHelper.isReranking = true;
                 MatchingHelper.rerankingImageName = (int)MatchingHelper.resultsForReranking[3];
                 this.ResultPage_Loaded(new object(), new RoutedEventArgs());
             }
@@ -214,9 +218,8 @@ namespace v0_1
 
         private void Image5_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (Image5.StrokeThickness == 4)
+            if (reranking)
             {
-                MatchingHelper.isReranking = true;
                 MatchingHelper.rerankingImageName = (int)MatchingHelper.resultsForReranking[4];
                 this.ResultPage_Loaded(new object(), new RoutedEventArgs());
             }

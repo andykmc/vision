@@ -10,7 +10,6 @@ namespace v0_1
     static class MatchingHelper
     {
         public static string matchedClass;
-        public static bool isReranking = false;
         public static int rerankingImageName = -1;//-1 means not doing reranking
         public static double[] resultsForReranking ;//stores the image number when images are categories covered by similarity matrix
 
@@ -25,14 +24,13 @@ namespace v0_1
             //MessageBox.Show("start match");
             MWresult = matchtest.build_matching_test_correct_csharp2();
             output = (MWCharArray)MWresult[1, 1];
-            matchedClass = output.ToString();
-            isReranking = false;
+            matchedClass = output.ToString();            
             rerankingImageName = -1;
             return matchedClass;
         }
 
         public static double[] SearchSimilar(int targetImageNum, int numberOfImageToRetrieve)
-        {
+        {            
             // To declare a 500x500 matrix 
             double[][] similarity = new double[500][];
             for (int x = 0; x < similarity.Length; x++)
@@ -96,7 +94,7 @@ namespace v0_1
             for (int i = 0; i < N; i++)
             {
                 arr[0][i] = i + 1;
-                arr[1][i] = similarity[n][i];
+                arr[1][i] = similarity[n-1][i];
             }
 
             for (int i = 0; i < N - 1; i++)
